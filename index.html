@@ -137,7 +137,191 @@ class: theme-green
 
 class: theme-light-maximal
 
-## Apache Arrow: The Big Idea
+## Apache Arrow: The big idea
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## What if things were better...
+
+- Insert the motivating example here
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Serialisation costs set the "data exchange rate"
+
+.pull-left-narrow[
+- Convert and copy
+- Serialisation costs
+- Much pain!
+]
+
+.pull-right-wide[
+&lt;img src="img/data-interchange.svg" height="100%" /&gt;
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Standardisation lowers costs
+
+.pull-left-narrow[
+- Agreed format
+- Shared memory
+- Fast, efficient
+]
+
+.pull-right-wide[
+&lt;img src="img/data-interchange-arrow.svg" height="100%" /&gt;
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Columnar formats are efficient
+
+- Self-similarity among column elements
+- Filtering operations are faster
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-light-maximal
+
+## Connecting Arrow and R
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## How does R fit into the Arrow ecosystem?
+
+- Explain relation between {arrow} and C++ libarrow
+- C++ implementation links to Python, etc
+- Other languages
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## How does Arrow fit into the R ecosystem?
+
+- Explain the {dplyr} back end 
+- Intent is to let users write "native R" code for Arrow objects
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## How do new users get started?
+
+- Simply by typing `install.packages("arrow")`
+- Links to resources go here
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-light-maximal
+
+## Let's see it in action!
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## The NYC taxi data
+
+- Do some fancy pants stuff, show off joins
+- Airport trips is a nice trick for that
+- Appeal to R users by mapping with geom_sf
+
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-light-maximal
+
+## Getting a deeper understanding
+
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Where does the new R user go?
+
+- Cookbooks
+- Blogposts
+- Workshops
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## How can the Arrow community help?
+
+- Looking at our docs from a new user perspective
+- Putting together novice friendly tutorials
+- Being visible and helpful where we can!
+
+
+
+
+
+
 
 
 
@@ -254,8 +438,8 @@ berlin_time
 ```
 
 ```
-## [1] "2022-05-26 11:17:38 AEST"
-## [1] "2022-05-26 03:17:38 CEST"
+## [1] "2022-05-26 12:27:18 AEST"
+## [1] "2022-05-26 04:27:18 CEST"
 ```
 ]
 
