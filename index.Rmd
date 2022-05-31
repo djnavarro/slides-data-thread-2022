@@ -395,6 +395,14 @@ nyc_taxi |>
   collect()
 ```
 
+<!-- 
+```{r, echo=FALSE, results='asis'}
+decorate_chunk("nyc-taxi-filter-3") |>
+  flair_rx("head", background = "#000000") |>
+  flair::knit_print.with_flair()
+```
+-->
+
 
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
@@ -844,37 +852,5 @@ class: theme-light-maximal
   <li><span class="fa-li"><i class="fa fa-globe"></i></span>djnavarro.net</li>
 </ol>
 ]
-
-
-
----
-
-<!-- class: theme-green-minimal -->
-
-<!-- ## A slide with flair -->
-
-<!-- - the flair package allows fancy code decoration -->
-<!-- - docs: https://r-for-educators.github.io/flair/ -->
-
-<!-- ```{r filenames, include=FALSE, results='hide'} -->
-<!-- "analysis01_descriptive-statistics.R" -->
-<!-- "analysis02_preregistered-analysis.R" -->
-<!-- "notes01_realising-the-problem.txt" -->
-<!-- "analysis03_departing-from-the-plan.R" -->
-<!-- "notes02_tentative-write-up.docx" -->
-<!-- ``` -->
-
-<!-- .pull-left-wide[ -->
-<!-- <!--  -->
-<!-- The pull left wide class is used here for aesthetic purposes. It  -->
-<!-- prevents the background colour from the code block extending too  -->
-<!-- far rightwards -->
-<!-- --> -->
-<!-- ```{r, echo=FALSE, results='asis'} -->
-<!-- decorate_chunk("filenames") %>%  -->
-<!--   flair_rx("_[^.]*", background = "#000000") %>%  -->
-<!--   flair::knit_print.with_flair() -->
-<!-- ``` -->
-<!-- ] -->
 
 

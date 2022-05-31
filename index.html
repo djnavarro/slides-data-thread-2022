@@ -454,6 +454,27 @@ nyc_taxi |&gt;
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
 
+&lt;!-- 
+
+&lt;code class ='r hljs remark-code'&gt;nyc_taxi |&gt; &lt;br&gt;&amp;nbsp;&amp;nbsp;filter(year == 2019) |&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;select(matches("pickup"), matches("dropoff")) |&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;&lt;span style='background-color:#000000'&gt;head&lt;/span&gt;() |&gt;&lt;br&gt;&amp;nbsp;&amp;nbsp;collect()&lt;/code&gt;
+
+```
+
+## # A tibble: 6 × 8
+##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
+##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
+## 1 2019-11-02 04:31:11               NA              NA                161
+## 2 2019-11-02 04:31:11               NA              NA                161
+## 3 2019-11-02 04:43:43               NA              NA                233
+## 4 2019-11-02 04:57:46               NA              NA                164
+## 5 2019-11-02 04:57:46               NA              NA                164
+## 6 2019-11-02 04:36:58               NA              NA                261
+## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
+## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
+
+```
+--&gt;
+
 
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
@@ -854,16 +875,16 @@ nyc_taxi |&gt;
 ## # A tibble: 22,228,736 × 6
 ##    pickup_datetime     dropoff_datetime    pickup_location_id dropoff_location_…
 ##    &lt;dttm&gt;              &lt;dttm&gt;                           &lt;int&gt;              &lt;int&gt;
-##  1 2016-10-01 21:25:28 2016-10-01 22:12:36                132                142
-##  2 2016-10-01 21:25:31 2016-10-01 21:54:12                132                  7
-##  3 2016-10-01 21:25:38 2016-10-01 21:54:09                138                181
-##  4 2016-10-01 21:25:44 2016-10-01 21:53:04                138                 17
-##  5 2016-10-01 21:25:47 2016-10-01 22:46:14                132                162
-##  6 2016-10-01 21:25:48 2016-10-01 22:22:16                132                230
-##  7 2016-10-01 21:25:53 2016-10-01 22:11:04                132                  4
-##  8 2016-10-01 21:26:04 2016-10-01 21:39:15                138                 56
-##  9 2016-10-01 21:26:15 2016-10-01 22:10:25                132                 25
-## 10 2016-10-01 21:26:18 2016-10-01 21:46:38                138                132
+##  1 2016-10-01 13:53:24 2016-10-01 14:20:27                132                236
+##  2 2016-10-01 13:54:08 2016-10-01 14:08:27                138                243
+##  3 2016-10-01 13:59:13 2016-10-01 14:05:43                132                219
+##  4 2016-10-01 14:08:11 2016-10-01 14:45:15                132                186
+##  5 2016-10-01 14:10:06 2016-10-01 14:12:40                132                132
+##  6 2016-10-01 14:10:31 2016-10-01 14:40:47                132                188
+##  7 2016-10-01 14:10:33 2016-10-01 14:38:45                132                189
+##  8 2016-10-01 14:18:31 2016-10-01 14:36:02                132                138
+##  9 2016-10-01 14:21:14 2016-10-01 14:27:23                132                218
+## 10 2016-10-01 14:26:20 2016-10-01 14:26:59                  1                  1
 ## # … with 22,228,726 more rows, and 2 more variables: dropoff_borough &lt;chr&gt;,
 ## #   dropoff_zone &lt;chr&gt;
 ```
@@ -1032,38 +1053,6 @@ class: theme-light-maximal
   &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fa fa-globe"&gt;&lt;/i&gt;&lt;/span&gt;djnavarro.net&lt;/li&gt;
 &lt;/ol&gt;
 ]
-
-
-
----
-
-&lt;!-- class: theme-green-minimal --&gt;
-
-&lt;!-- ## A slide with flair --&gt;
-
-&lt;!-- - the flair package allows fancy code decoration --&gt;
-&lt;!-- - docs: https://r-for-educators.github.io/flair/ --&gt;
-
-&lt;!-- ```{r filenames, include=FALSE, results='hide'} --&gt;
-&lt;!-- "analysis01_descriptive-statistics.R" --&gt;
-&lt;!-- "analysis02_preregistered-analysis.R" --&gt;
-&lt;!-- "notes01_realising-the-problem.txt" --&gt;
-&lt;!-- "analysis03_departing-from-the-plan.R" --&gt;
-&lt;!-- "notes02_tentative-write-up.docx" --&gt;
-&lt;!-- ``` --&gt;
-
-&lt;!-- .pull-left-wide[ --&gt;
-&lt;!-- &lt;!--  --&gt;
-&lt;!-- The pull left wide class is used here for aesthetic purposes. It  --&gt;
-&lt;!-- prevents the background colour from the code block extending too  --&gt;
-&lt;!-- far rightwards --&gt;
-&lt;!-- --&gt; --&gt;
-&lt;!-- ```{r, echo=FALSE, results='asis'} --&gt;
-&lt;!-- decorate_chunk("filenames") %&gt;%  --&gt;
-&lt;!--   flair_rx("_[^.]*", background = "#000000") %&gt;%  --&gt;
-&lt;!--   flair::knit_print.with_flair() --&gt;
-&lt;!-- ``` --&gt;
-&lt;!-- ] --&gt;
 
 
     </textarea>
