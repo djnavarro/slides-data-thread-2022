@@ -142,7 +142,7 @@ class: theme-green
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-light-maximal
+class: theme-dark-maximal
 
 ## Apache Arrow: The big idea
 
@@ -166,21 +166,14 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Serialisation costs set the "data exchange rate"
+## Data interchange without a standard format
 
-.pull-left-narrow[
-- Convert and copy
-- Serialisation costs
-- Much pain!
-]
-
-.pull-right-wide[
 ```{r}
 #| echo: false
-#| out-height: 100%
-knitr::include_graphics("img/data-interchange.svg")
+#| out-width: 70%
+knitr::include_graphics("img/data-interchange-1.svg")
 ```
-]
+
 
 
 
@@ -189,21 +182,14 @@ knitr::include_graphics("img/data-interchange.svg")
 
 class: theme-green-minimal
 
-## Standardisation lowers costs
+## Data interchange with a standard format
 
-.pull-left-narrow[
-- Agreed format
-- Shared memory
-- Fast, efficient
-]
-
-.pull-right-wide[
 ```{r}
 #| echo: false
-#| out-height: 100%
-knitr::include_graphics("img/data-interchange-arrow.svg")
+#| out-width: 70%
+knitr::include_graphics("img/data-interchange-2.svg")
 ```
-]
+
 
 
 
@@ -223,7 +209,7 @@ class: theme-green-minimal
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-light-maximal
+class: theme-dark-maximal
 
 ## Connecting R to the Arrow ecosystem
 
@@ -275,7 +261,7 @@ knitr::include_graphics("img/arrow-ecosystem-3.svg")
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-light-maximal
+class: theme-dark-maximal
 
 ## Connecting Arrow to the R ecosystem
 
@@ -359,7 +345,7 @@ class: theme-green-minimal
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-light-maximal
+class: theme-dark-maximal
 
 ## Let's see it in action!
 
@@ -881,7 +867,7 @@ class: theme-green-minimal
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-light-maximal
+class: theme-dark-maximal
 
 ## Getting a deeper understanding
 
@@ -922,7 +908,7 @@ class: theme-green-minimal
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-light-maximal
+class: theme-dark-maximal
 
 ## Making connections with data! 
 
