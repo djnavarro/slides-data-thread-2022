@@ -225,7 +225,35 @@ class: theme-green-minimal
 
 class: theme-light-maximal
 
-## Connecting Arrow and R
+## Connecting R to the Arrow ecosystem
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## How does R fit into the Arrow ecosystem?
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/arrow-ecosystem-1.svg")
+```
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## How does R fit into the Arrow ecosystem?
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/arrow-ecosystem-2.svg")
+```
 
 
 
@@ -236,9 +264,21 @@ class: theme-green-minimal
 
 ## How does R fit into the Arrow ecosystem?
 
-- Explain relation between {arrow} and C++ libarrow
-- C++ implementation links to Python, etc
-- Other languages
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/arrow-ecosystem-3.svg")
+```
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-light-maximal
+
+## Connecting Arrow to the R ecosystem
+
 
 
 <!----------------------------- SLIDE BREAK ----------------------------->
@@ -248,8 +288,55 @@ class: theme-green-minimal
 
 ## How does Arrow fit into the R ecosystem?
 
-- Explain the {dplyr} back end 
-- Intent is to let users write "native R" code for Arrow objects
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/dplyr-backends-1.svg")
+```
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## How does Arrow fit into the R ecosystem?
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/dplyr-backends-2.svg")
+```
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## How does Arrow fit into the R ecosystem?
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/dplyr-backends-3.svg")
+```
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## How does Arrow fit into the R ecosystem?
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/dplyr-backends-4.svg")
+```
 
 
 
