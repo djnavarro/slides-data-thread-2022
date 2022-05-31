@@ -25,6 +25,7 @@
     <link href="libs/font-awesome/css/v4-shims.css" rel="stylesheet" />
     <link rel="stylesheet" href="style/xaringan-themer.css" type="text/css" />
     <link rel="stylesheet" href="style/voltron-data-style.css" type="text/css" />
+    <link rel="stylesheet" href="style/tweaks.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -272,9 +273,698 @@ class: theme-green-minimal
 
 ## The NYC taxi data
 
-- Do some fancy pants stuff, show off joins
-- Airport trips is a nice trick for that
-- Appeal to R users by mapping with geom_sf
+- Extract taxi rides from the three major airports
+- Visualise the destinations by taxi zone
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+
+```r
+nyc_taxi &lt;- open_dataset("~/Datasets/nyc-taxi")
+nyc_taxi
+```
+]
+--
+.pull-left-wide[
+.scroll-box-10[
+
+```
+## FileSystemDataset with 158 Parquet files
+## vendor_name: string
+## pickup_datetime: timestamp[ms]
+## dropoff_datetime: timestamp[ms]
+## passenger_count: int64
+## trip_distance: double
+## pickup_longitude: double
+## pickup_latitude: double
+## rate_code: string
+## store_and_fwd: string
+## dropoff_longitude: double
+## dropoff_latitude: double
+## payment_type: string
+## fare_amount: double
+## extra: double
+## mta_tax: double
+## tip_amount: double
+## tolls_amount: double
+## total_amount: double
+## improvement_surcharge: double
+## congestion_surcharge: double
+## pickup_location_id: int64
+## dropoff_location_id: int64
+## year: int32
+## month: int32
+```
+]
+]
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+
+```r
+nyc_taxi |&gt; 
+  nrow()
+```
+
+```
+## [1] 1672590319
+```
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Select and filter
+
+.pull-left-wide[
+
+```r
+nyc_taxi |&gt; 
+  filter(year == 2019) |&gt;
+  select(matches("pickup"), matches("dropoff")) 
+```
+
+```
+## FileSystemDataset (query)
+## pickup_datetime: timestamp[ms]
+## pickup_longitude: double
+## pickup_latitude: double
+## pickup_location_id: int64
+## dropoff_datetime: timestamp[ms]
+## dropoff_longitude: double
+## dropoff_latitude: double
+## dropoff_location_id: int64
+## 
+## * Filter: (year == 2019)
+## See $.data for the source Arrow object
+```
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Select and filter
+
+.pull-left-wide[
+
+```r
+nyc_taxi |&gt; 
+  filter(year == 2019) |&gt;
+  select(matches("pickup"), matches("dropoff")) |&gt;
+  nrow()
+```
+
+```
+## [1] 84393604
+```
+]
+
+--
+
+.pull-left-wide[
+
+
+```r
+nyc_taxi |&gt; 
+  nrow()
+```
+
+```
+## [1] 1672590319
+```
+
+]
+
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Spatial data as "location_id"
+
+
+```r
+nyc_taxi |&gt; 
+  filter(year == 2019) |&gt;
+  select(matches("pickup"), matches("dropoff")) |&gt;
+  head() |&gt;
+  collect()
+```
+
+```
+## # A tibble: 6 × 8
+##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
+##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
+## 1 2019-01-02 03:11:05               NA              NA                233
+## 2 2019-01-02 02:56:45               NA              NA                186
+## 3 2019-01-02 03:18:28               NA              NA                114
+## 4 2019-01-02 03:25:43               NA              NA                234
+## 5 2019-01-02 03:51:35               NA              NA                246
+## 6 2019-01-02 03:51:54               NA              NA                211
+## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
+## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
+```
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## A secondary table
+
+.pull-left-wide[
+
+```r
+nyc_taxi_zones &lt;- "data/taxi_zone_lookup.csv" |&gt; 
+  read_csv_arrow() |&gt;
+  janitor::clean_names()
+```
+]
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## A secondary table
+
+.pull-left-wide[
+
+```r
+nyc_taxi_zones
+```
+
+```
+## # A tibble: 265 × 4
+##    location_id borough       zone                    service_zone
+##          &lt;int&gt; &lt;chr&gt;         &lt;chr&gt;                   &lt;chr&gt;       
+##  1           1 EWR           Newark Airport          EWR         
+##  2           2 Queens        Jamaica Bay             Boro Zone   
+##  3           3 Bronx         Allerton/Pelham Gardens Boro Zone   
+##  4           4 Manhattan     Alphabet City           Yellow Zone 
+##  5           5 Staten Island Arden Heights           Boro Zone   
+##  6           6 Staten Island Arrochar/Fort Wadsworth Boro Zone   
+##  7           7 Queens        Astoria                 Boro Zone   
+##  8           8 Queens        Astoria Park            Boro Zone   
+##  9           9 Queens        Auburndale              Boro Zone   
+## 10          10 Queens        Baisley Park            Boro Zone   
+## # … with 255 more rows
+```
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## A secondary table
+
+.pull-left-wide[
+
+```r
+nyc_taxi_zones |&gt; 
+  filter(str_detect(zone, "Airport"))
+```
+
+```
+## # A tibble: 3 × 4
+##   location_id borough zone              service_zone
+##         &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;             &lt;chr&gt;       
+## 1           1 EWR     Newark Airport    EWR         
+## 2         132 Queens  JFK Airport       Airports    
+## 3         138 Queens  LaGuardia Airport Airports
+```
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Extract airport zones
+
+.pull-left-wide[
+
+```r
+airport_zones &lt;- nyc_taxi_zones |&gt; 
+  filter(str_detect(zone, "Airport")) |&gt;
+  pull(location_id)
+
+airport_zones
+```
+
+```
+## [1]   1 132 138
+```
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Mutate, filter, and select
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  ) |&gt;
+  filter(pickup_airport == TRUE) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  )
+```
+]
+--
+.pull-right[
+.scroll-output[
+
+```
+## FileSystemDataset (query)
+## pickup_datetime: timestamp[ms]
+## dropoff_datetime: timestamp[ms]
+## pickup_location_id: int64
+## dropoff_location_id: int64
+## 
+## * Filter: (is_in(pickup_location_id, {value_set=int32:[
+##   1,
+##   132,
+##   138
+## ], skip_nulls=true}) == true)
+## See $.data for the source Arrow object
+```
+]
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Mutate, filter, and select
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  ) |&gt;
+  filter(pickup_airport == TRUE) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  nrow()
+```
+
+```
+## [1] 22228736
+```
+]
+
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Database joins
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(
+    nyc_taxi_zones,
+    by = c(
+      "dropoff_location_id" = "location_id"
+    )
+  )
+```
+]
+--
+.pull-right[
+.scroll-output[
+
+```
+## FileSystemDataset (query)
+## pickup_datetime: timestamp[ms]
+## dropoff_datetime: timestamp[ms]
+## pickup_location_id: int64
+## dropoff_location_id: int64
+## borough: string
+## zone: string
+## service_zone: string
+## 
+## See $.data for the source Arrow object
+```
+]
+]
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Database joins
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(
+    nyc_taxi_zones,
+    by = c(
+      "dropoff_location_id" = "location_id"
+    )
+  ) |&gt;
+  collect()
+```
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Wait, this errors????
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(
+    nyc_taxi_zones,
+    by = c(
+      "dropoff_location_id" = "location_id"
+    )
+  ) |&gt;
+  collect()
+```
+]
+
+.pull-right[
+.scroll-output[
+
+```
+## Error in `collect()`:
+## ! Invalid: Incompatible data types for corresponding join field keys: FieldRef.Name(dropoff_location_id) of type int64 and FieldRef.Name(location_id) of type int32
+```
+]
+]
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Wait, this errors????
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(
+    nyc_taxi_zones,
+    by = c(
+      "dropoff_location_id" = "location_id"
+    )
+  ) |&gt;
+  collect()
+```
+]
+
+.pull-right[
+- `location_id`: 
+    - 32-bit integer
+- `dropoff_location_id`: 
+    - 64-bit integer
+- Needs to be handled explicitly
+- May be new to some R users
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Explicit type casting
+
+.pull-left[
+
+```r
+nyc_taxi_zones_2 &lt;- nyc_taxi_zones |&gt;
+  transmute(
+    dropoff_location_id = location_id, 
+    dropoff_borough = borough,
+    dropoff_zone = zone) |&gt;
+  as_arrow_table(
+    schema = schema(
+      dropoff_location_id = int64(),
+      dropoff_borough = utf8(),
+      dropoff_zone = utf8()
+    )
+  )
+
+nyc_taxi_zones_2
+```
+]
+--
+.pull-right[
+.scroll-output[
+
+```
+## Table
+## 265 rows x 3 columns
+## $dropoff_location_id &lt;int64&gt;
+## $dropoff_borough &lt;string&gt;
+## $dropoff_zone &lt;string&gt;
+```
+]
+]
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Now it all works...
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(nyc_taxi_zones_2) |&gt;
+  collect()
+```
+]
+--
+.pull-right[
+.scroll-output[
+
+```
+## # A tibble: 22,228,736 × 6
+##    pickup_datetime     dropoff_datetime    pickup_location_id dropoff_location_…
+##    &lt;dttm&gt;              &lt;dttm&gt;                           &lt;int&gt;              &lt;int&gt;
+##  1 2016-10-01 21:25:28 2016-10-01 22:12:36                132                142
+##  2 2016-10-01 21:25:31 2016-10-01 21:54:12                132                  7
+##  3 2016-10-01 21:25:38 2016-10-01 21:54:09                138                181
+##  4 2016-10-01 21:25:44 2016-10-01 21:53:04                138                 17
+##  5 2016-10-01 21:25:47 2016-10-01 22:46:14                132                162
+##  6 2016-10-01 21:25:48 2016-10-01 22:22:16                132                230
+##  7 2016-10-01 21:25:53 2016-10-01 22:11:04                132                  4
+##  8 2016-10-01 21:26:04 2016-10-01 21:39:15                138                 56
+##  9 2016-10-01 21:26:15 2016-10-01 22:10:25                132                 25
+## 10 2016-10-01 21:26:18 2016-10-01 21:46:38                138                132
+## # … with 22,228,726 more rows, and 2 more variables: dropoff_borough &lt;chr&gt;,
+## #   dropoff_zone &lt;chr&gt;
+```
+]
+]
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Aggregate by zone
+
+.pull-left[
+
+```r
+nyc_taxi_zone_counts &lt;- nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(nyc_taxi_zones_2) |&gt;
+  count(dropoff_zone) |&gt;
+  arrange(desc(n)) |&gt;
+  collect()
+
+nyc_taxi_zone_counts
+```
+]
+
+.pull-right[
+.scroll-output[
+
+```
+## # A tibble: 262 × 2
+##    dropoff_zone                    n
+##    &lt;chr&gt;                       &lt;int&gt;
+##  1 Times Sq/Theatre District 1068981
+##  2 Midtown Center             691807
+##  3 Midtown East               691641
+##  4 JFK Airport                645621
+##  5 Midtown South              551206
+##  6 Clinton East               544932
+##  7 Murray Hill                534570
+##  8 Midtown North              515244
+##  9 &lt;NA&gt;                       419348
+## 10 LaGuardia Airport          307649
+## # … with 252 more rows
+```
+]
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## ... and a tiny bit more work ...
+
+
+
+.pull-left-wide[
+
+```r
+nyc_taxi_zones_spatial &lt;- "data/taxi_zones/taxi_zones.shp" |&gt; 
+  sf::read_sf() |&gt;
+  janitor::clean_names()
+
+nyc_taxi_zones_spatial |&gt; 
+  left_join(nyc_taxi_zone_counts,
+            by = c("zone" = "dropoff_zone")) |&gt;
+  ggplot(aes(fill = n)) + 
+  geom_sf(size = .1) + 
+  scale_fill_distiller(
+    name = "Number of trips",
+    labels = scales::label_comma(),
+    direction = 1
+  ) + 
+  theme_custom()
+```
+]
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Produces a nice visualisation
+
+&lt;img src="index_files/figure-html/taxi-zones-map-1.png" width="750" /&gt;
+
+
+
 
 
 
@@ -322,321 +1012,17 @@ class: theme-green-minimal
 
 
 
-
-
-
-
-
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
-class: theme-green-maximal
+class: theme-light-maximal
 
-## class: theme-green-maximal
-
-- good for section titles
-- especially with helper classes added
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green
-
-## class: theme-green
-
-- good for content slides with very little text or code
-- links display in orange, https://arrow.apache.org
-- inline code is light green, `library(arrow)`
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## class: theme-green-minimal
-
-- good for content slides with more text or code
-- links display in orange, https://arrow.apache.org
-- inline code is light green, `library(arrow)`
-- code blocks use solarized-dark theme:
-
-
-```r
-runif(1000) |&gt;
-  sqrt() |&gt;
-  quantile(probs = seq(0, 1, .1))
-```
-
-```
-##         0%        10%        20%        30%        40%        50%        60% 
-## 0.01848817 0.32447351 0.45628372 0.55152209 0.63832275 0.71427744 0.77847637 
-##        70%        80%        90%       100% 
-## 0.83779146 0.89754058 0.95964497 0.99965145
-```
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## class: theme-green-minimal
-
-this is what block quotes look like:
-
-&gt; lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-light
-
-## class: theme-light
-
-- theme-light mirrors theme-green in structure
-- there is also a theme-light-minimal and theme-light-maximal
-- links display in darker orange, https://arrow.apache.org
-- inline code is darker green, `library(arrow)`
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-light-minimal
-
-## class: theme-light-minimal
+## Making connections with data! 
 
 .pull-left[
-- pull-left makes a left column
-- pull-right makes a right column
-- code can nest within a column:
-
-```r
-sydney_time &lt;- lubridate::now()
-berlin_time &lt;- sydney_time |&gt; 
-  lubridate::with_tz("Europe/Berlin")
-```
-]
-
---
-
-.pull-right[
-- handy to show code on the left
-- then reveal results on the right:
-
-```r
-sydney_time
-berlin_time
-```
-
-```
-## [1] "2022-05-26 13:01:31 AEST"
-## [1] "2022-05-26 05:01:31 CEST"
-```
-]
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-dark
-
-## class: theme-dark
-
-- theme-dark, theme-dark-minimal, and theme-dark-maximal
-- links display in orange, https://arrow.apache.org
-- inline code is light green, `library(arrow)`
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-dark
-
-## class: theme-dark
-
-.pull-left-wide[
-- pull-left-wide makes a 70%-width column
-- pull-right-wide makes a 70%-width column
-- pull-left-narrow makes a 30%-width column
-- pull-right-narrow makes a 30%-width column
-]
-
---
-
-.pull-right-narrow[
-
-```r
-runif(1000) |&gt;
-  sqrt() |&gt;
-  mean()
-```
-
-```
-## [1] 0.6578119
-```
-]
-
-
----
-
-class: theme-dark-nologo
-
-## class: theme-dark-minimal-nologo
-
-- every theme has a "nologo" version
-- prevents title and logo competing for audience attention
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## A slide with flair
-
-- the flair package allows fancy code decoration
-- docs: https://r-for-educators.github.io/flair/
-
-
-
-.pull-left-wide[
-&lt;!-- 
-The pull left wide class is used here for aesthetic purposes. It 
-prevents the background colour from the code block extending too 
-far rightwards
---&gt;
-
-&lt;code class ='r hljs remark-code'&gt;"analysis01&lt;span style='background-color:#000000'&gt;_descriptive-statistics&lt;/span&gt;.R"&lt;br&gt;"analysis02&lt;span style='background-color:#000000'&gt;_preregistered-analysis&lt;/span&gt;.R"&lt;br&gt;"notes01&lt;span style='background-color:#000000'&gt;_realising-the-problem&lt;/span&gt;.txt"&lt;br&gt;"analysis03&lt;span style='background-color:#000000'&gt;_departing-from-the-plan&lt;/span&gt;.R"&lt;br&gt;"notes02&lt;span style='background-color:#000000'&gt;_tentative-write-up&lt;/span&gt;.docx"&lt;/code&gt;
-]
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## A slide with ggplot2 themes
-
-.pull-left[
-
-```r
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point() +
-  labs(
-    x = "engine displacement", 
-    y = "highway mileage",
-    title = "An example plot",
-    subtitle = "Theme based on theme_bw()"
-  ) + 
-  facet_wrap(vars(year)) + 
-  theme_voltron_light()
-```
-]
-
---
-
-.pull-right[
-![](index_files/figure-html/run-ggplot-example-1.png)&lt;!-- --&gt;
-]
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-light-minimal
-
-## A slide with ggplot2 themes
-
-.pull-left[
-
-```r
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point() +
-  labs(
-    x = "engine displacement", 
-    y = "highway mileage",
-    title = "An example plot",
-    subtitle = "Theme based on theme_dark()"
-  ) + 
-  facet_wrap(vars(year)) + 
-  theme_voltron_dark()
-```
-]
-
-.pull-right[
-![](index_files/figure-html/run-ggplot-example-light-1.png)&lt;!-- --&gt;
-]
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-dark-minimal
-
-## A slide with ggplot2 themes
-
-.pull-left[
-
-```r
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point() +
-  labs(
-    x = "engine displacement", 
-    y = "highway mileage",
-    title = "An example plot",
-    subtitle = "Theme based on theme_dark()"
-  ) + 
-  facet_wrap(vars(year)) + 
-  theme_voltron_light()
-```
-]
-
-.pull-right[
-![](index_files/figure-html/run-ggplot-example-dark-1.png)&lt;!-- --&gt;
-]
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green
-
-## Using font-awesome icons in lists
-
-&lt;!-- 
-embedding raw html is handy for things like using font-awesome icons as
-the bullets in list 
---&gt;
-&lt;ol class="fa-ul"&gt;
-  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-check-square"&gt;&lt;/i&gt;&lt;/span&gt;Completed task&lt;/li&gt;
-  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-check-square"&gt;&lt;/i&gt;&lt;/span&gt;Completed task&lt;/li&gt;
-  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="fas fa-spinner fa-pulse"&gt;&lt;/i&gt;&lt;/span&gt;Work in progress&lt;/li&gt;
-  &lt;li&gt;&lt;span class="fa-li"&gt;&lt;i class="far fa-square"&gt;&lt;/i&gt;&lt;/span&gt;Future work&lt;/li&gt;
-&lt;/ol&gt;
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-maximal
-
-## Final slide with key points and links
-
-.pull-left[
-- xaringan templates are cool
-- this is a work in progress
-- please send bug reports!
+- Apache Arrow is cool
+- Data wrangling in R is cool
+- {arrow} brings them together
 ]
 
 .pull-right[
@@ -649,6 +1035,35 @@ class: theme-green-maximal
 
 
 
+---
+
+&lt;!-- class: theme-green-minimal --&gt;
+
+&lt;!-- ## A slide with flair --&gt;
+
+&lt;!-- - the flair package allows fancy code decoration --&gt;
+&lt;!-- - docs: https://r-for-educators.github.io/flair/ --&gt;
+
+&lt;!-- ```{r filenames, include=FALSE, results='hide'} --&gt;
+&lt;!-- "analysis01_descriptive-statistics.R" --&gt;
+&lt;!-- "analysis02_preregistered-analysis.R" --&gt;
+&lt;!-- "notes01_realising-the-problem.txt" --&gt;
+&lt;!-- "analysis03_departing-from-the-plan.R" --&gt;
+&lt;!-- "notes02_tentative-write-up.docx" --&gt;
+&lt;!-- ``` --&gt;
+
+&lt;!-- .pull-left-wide[ --&gt;
+&lt;!-- &lt;!--  --&gt;
+&lt;!-- The pull left wide class is used here for aesthetic purposes. It  --&gt;
+&lt;!-- prevents the background colour from the code block extending too  --&gt;
+&lt;!-- far rightwards --&gt;
+&lt;!-- --&gt; --&gt;
+&lt;!-- ```{r, echo=FALSE, results='asis'} --&gt;
+&lt;!-- decorate_chunk("filenames") %&gt;%  --&gt;
+&lt;!--   flair_rx("_[^.]*", background = "#000000") %&gt;%  --&gt;
+&lt;!--   flair::knit_print.with_flair() --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
 
 
     </textarea>

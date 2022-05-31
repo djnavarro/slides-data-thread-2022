@@ -7,7 +7,7 @@ output:
   xaringan::moon_reader:
     seal: false 
     lib_dir: libs
-    css: ["style/xaringan-themer.css", "style/voltron-data-style.css"]
+    css: ["style/xaringan-themer.css", "style/voltron-data-style.css", "style/tweaks.css"]
     nature:
       highlightStyle: solarized-dark
       highlightLines: true
@@ -26,6 +26,7 @@ library(xaringanthemer)
 library(tidyverse)
 library(flair)
 library(metathis)
+library(arrow)
 ```
 
 
@@ -286,9 +287,496 @@ class: theme-green-minimal
 
 ## The NYC taxi data
 
-- Do some fancy pants stuff, show off joins
-- Airport trips is a nice trick for that
-- Appeal to R users by mapping with geom_sf
+- Extract taxi rides from the three major airports
+- Visualise the destinations by taxi zone
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+```{r open-nyc-taxi, eval=FALSE}
+nyc_taxi <- open_dataset("~/Datasets/nyc-taxi")
+nyc_taxi
+```
+]
+--
+.pull-left-wide[
+.scroll-box-10[
+```{r, ref.label="open-nyc-taxi", echo=FALSE}
+```
+]
+]
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+```{r nyc-taxi-rows}
+nyc_taxi |> 
+  nrow()
+```
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Select and filter
+
+.pull-left-wide[
+```{r nyc-taxi-filter}
+nyc_taxi |> 
+  filter(year == 2019) |>
+  select(matches("pickup"), matches("dropoff")) 
+```
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Select and filter
+
+.pull-left-wide[
+```{r nyc-taxi-filter-2}
+nyc_taxi |> 
+  filter(year == 2019) |>
+  select(matches("pickup"), matches("dropoff")) |>
+  nrow()
+```
+]
+
+--
+
+.pull-left-wide[
+
+```{r}
+nyc_taxi |> 
+  nrow()
+```
+
+]
+
+
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Spatial data as "location_id"
+
+```{r nyc-taxi-filter-3}
+nyc_taxi |> 
+  filter(year == 2019) |>
+  select(matches("pickup"), matches("dropoff")) |>
+  head() |>
+  collect()
+```
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## A secondary table
+
+.pull-left-wide[
+```{r nyc-taxi-zones}
+nyc_taxi_zones <- "data/taxi_zone_lookup.csv" |> 
+  read_csv_arrow() |>
+  janitor::clean_names()
+```
+]
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## A secondary table
+
+.pull-left-wide[
+```{r nyc-taxi-zones-2}
+nyc_taxi_zones
+```
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## A secondary table
+
+.pull-left-wide[
+```{r nyc-taxi-zones-3}
+nyc_taxi_zones |> 
+  filter(str_detect(zone, "Airport"))
+```
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Extract airport zones
+
+.pull-left-wide[
+```{r nyc-taxi-zones-4}
+airport_zones <- nyc_taxi_zones |> 
+  filter(str_detect(zone, "Airport")) |>
+  pull(location_id)
+
+airport_zones
+```
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Mutate, filter, and select
+
+.pull-left[
+```{r nyc-taxi-filter-4, eval=FALSE}
+nyc_taxi |> 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  ) |>
+  filter(pickup_airport == TRUE) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  )
+```
+]
+--
+.pull-right[
+.scroll-output[
+```{r, ref.label="nyc-taxi-filter-4", echo=FALSE}
+```
+]
+]
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Mutate, filter, and select
+
+.pull-left[
+```{r nyc-taxi-filter-5}
+nyc_taxi |> 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  ) |>
+  filter(pickup_airport == TRUE) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |> 
+  nrow()
+```
+]
+
+
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Database joins
+
+.pull-left[
+```{r nyc-taxi-join, eval=FALSE}
+nyc_taxi |> 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |> 
+  left_join(
+    nyc_taxi_zones,
+    by = c(
+      "dropoff_location_id" = "location_id"
+    )
+  )
+```
+]
+--
+.pull-right[
+.scroll-output[
+```{r, ref.label="nyc-taxi-join", echo=FALSE}
+```
+]
+]
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Database joins
+
+.pull-left[
+```{r nyc-taxi-join-2, eval=FALSE}
+nyc_taxi |> 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |> 
+  left_join(
+    nyc_taxi_zones,
+    by = c(
+      "dropoff_location_id" = "location_id"
+    )
+  ) |>
+  collect()
+```
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Wait, this errors????
+
+.pull-left[
+```{r, ref.label="nyc-taxi-join-2", echo=TRUE, eval=FALSE}
+```
+]
+
+.pull-right[
+.scroll-output[
+```{r, ref.label="nyc-taxi-join-2", echo=FALSE, error=TRUE, warning=FALSE}
+```
+]
+]
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Wait, this errors????
+
+.pull-left[
+```{r, ref.label="nyc-taxi-join-2", echo=TRUE, eval=FALSE}
+```
+]
+
+.pull-right[
+- `location_id`: 
+    - 32-bit integer
+- `dropoff_location_id`: 
+    - 64-bit integer
+- Needs to be handled explicitly
+- May be new to some R users
+]
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Explicit type casting
+
+.pull-left[
+```{r type-casting, eval=FALSE}
+nyc_taxi_zones_2 <- nyc_taxi_zones |>
+  transmute(
+    dropoff_location_id = location_id, 
+    dropoff_borough = borough,
+    dropoff_zone = zone) |>
+  as_arrow_table(
+    schema = schema(
+      dropoff_location_id = int64(),
+      dropoff_borough = utf8(),
+      dropoff_zone = utf8()
+    )
+  )
+
+nyc_taxi_zones_2
+```
+]
+--
+.pull-right[
+.scroll-output[
+```{r, ref.label="type-casting", echo=FALSE}
+```
+]
+]
+
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Now it all works...
+
+.pull-left[
+```{r nyc-taxi-join-3, eval=FALSE}
+nyc_taxi |> 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |> 
+  left_join(nyc_taxi_zones_2) |>
+  collect()
+```
+]
+--
+.pull-right[
+.scroll-output[
+```{r, ref.label="nyc-taxi-join-3", echo=FALSE, error=TRUE, warning=FALSE}
+```
+]
+]
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Aggregate by zone
+
+.pull-left[
+```{r nyc-taxi-join-4, eval=FALSE}
+nyc_taxi_zone_counts <- nyc_taxi |> 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |> 
+  left_join(nyc_taxi_zones_2) |>
+  count(dropoff_zone) |>
+  arrange(desc(n)) |>
+  collect()
+
+nyc_taxi_zone_counts
+```
+]
+
+.pull-right[
+.scroll-output[
+```{r, ref.label="nyc-taxi-join-4", echo=FALSE, error=TRUE, warning=FALSE}
+```
+]
+]
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## ... and a tiny bit more work ...
+
+```{r hack, echo=FALSE}
+theme_custom <- function() {
+  theme_voltron_light() + 
+  theme(
+    panel.grid = element_blank(), 
+    legend.background = element_rect(
+      colour = "transparent", 
+      fill = "transparent"
+    ), 
+    axis.text.x = element_text(angle = 90, vjust = .5)
+  )
+}
+```
+
+.pull-left-wide[
+```{r nyc-taxi-spatial, eval=FALSE}
+nyc_taxi_zones_spatial <- "data/taxi_zones/taxi_zones.shp" |> 
+  sf::read_sf() |>
+  janitor::clean_names()
+
+nyc_taxi_zones_spatial |> 
+  left_join(nyc_taxi_zone_counts,
+            by = c("zone" = "dropoff_zone")) |>
+  ggplot(aes(fill = n)) + 
+  geom_sf(size = .1) + 
+  scale_fill_distiller(
+    name = "Number of trips",
+    labels = scales::label_comma(),
+    direction = 1
+  ) + 
+  theme_custom()
+```
+]
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Produces a nice visualisation
+
+```{r taxi-zones-map, ref.label="nyc-taxi-spatial", out.width=750, echo=FALSE}
+```
+
+
+
 
 
 
@@ -336,316 +824,17 @@ class: theme-green-minimal
 
 
 
-
-
-
-
-
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-green-maximal
+class: theme-light-maximal
 
-## class: theme-green-maximal
-
-- good for section titles
-- especially with helper classes added
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green
-
-## class: theme-green
-
-- good for content slides with very little text or code
-- links display in orange, https://arrow.apache.org
-- inline code is light green, `library(arrow)`
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## class: theme-green-minimal
-
-- good for content slides with more text or code
-- links display in orange, https://arrow.apache.org
-- inline code is light green, `library(arrow)`
-- code blocks use solarized-dark theme:
-
-```{r}
-runif(1000) |>
-  sqrt() |>
-  quantile(probs = seq(0, 1, .1))
-```
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## class: theme-green-minimal
-
-this is what block quotes look like:
-
-> lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
-
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-light
-
-## class: theme-light
-
-- theme-light mirrors theme-green in structure
-- there is also a theme-light-minimal and theme-light-maximal
-- links display in darker orange, https://arrow.apache.org
-- inline code is darker green, `library(arrow)`
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-light-minimal
-
-## class: theme-light-minimal
+## Making connections with data! 
 
 .pull-left[
-- pull-left makes a left column
-- pull-right makes a right column
-- code can nest within a column:
-```{r}
-sydney_time <- lubridate::now()
-berlin_time <- sydney_time |> 
-  lubridate::with_tz("Europe/Berlin")
-```
-]
-
---
-
-.pull-right[
-- handy to show code on the left
-- then reveal results on the right:
-```{r, results='hold'}
-sydney_time
-berlin_time
-```
-]
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-dark
-
-## class: theme-dark
-
-- theme-dark, theme-dark-minimal, and theme-dark-maximal
-- links display in orange, https://arrow.apache.org
-- inline code is light green, `library(arrow)`
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-dark
-
-## class: theme-dark
-
-.pull-left-wide[
-- pull-left-wide makes a 70%-width column
-- pull-right-wide makes a 70%-width column
-- pull-left-narrow makes a 30%-width column
-- pull-right-narrow makes a 30%-width column
-]
-
---
-
-.pull-right-narrow[
-```{r}
-runif(1000) |>
-  sqrt() |>
-  mean()
-```
-]
-
-
----
-
-class: theme-dark-nologo
-
-## class: theme-dark-minimal-nologo
-
-- every theme has a "nologo" version
-- prevents title and logo competing for audience attention
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## A slide with flair
-
-- the flair package allows fancy code decoration
-- docs: https://r-for-educators.github.io/flair/
-
-```{r filenames, include=FALSE, results='hide'}
-"analysis01_descriptive-statistics.R"
-"analysis02_preregistered-analysis.R"
-"notes01_realising-the-problem.txt"
-"analysis03_departing-from-the-plan.R"
-"notes02_tentative-write-up.docx"
-```
-
-.pull-left-wide[
-<!-- 
-The pull left wide class is used here for aesthetic purposes. It 
-prevents the background colour from the code block extending too 
-far rightwards
--->
-```{r, echo=FALSE, results='asis'}
-decorate_chunk("filenames") %>% 
-  flair_rx("_[^.]*", background = "#000000") %>% 
-  flair::knit_print.with_flair()
-```
-]
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## A slide with ggplot2 themes
-
-.pull-left[
-```{r define-ggplot-example, fig.show='hide'}
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point() +
-  labs(
-    x = "engine displacement", 
-    y = "highway mileage",
-    title = "An example plot",
-    subtitle = "Theme based on theme_bw()"
-  ) + 
-  facet_wrap(vars(year)) + 
-  theme_voltron_light()
-```
-]
-
---
-
-.pull-right[
-```{r run-ggplot-example, ref.label="define-ggplot-example", echo=FALSE}
-# In case you are unfamiliar with it, this is the so-called "ref.label trick". 
-# When knit, R will first execute code in the "ggplot-example" chunk and then
-# any additional code in this chunk. It's especially handy in xaringan slides
-# when you want to separate the code defining a plot from its execution. It's
-# what allows me to put the code inside the .pull-left class, and the output
-# in the .pull-right class
-```
-]
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-light-minimal
-
-## A slide with ggplot2 themes
-
-.pull-left[
-```{r define-ggplot-example-light, fig.show='hide'}
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point() +
-  labs(
-    x = "engine displacement", 
-    y = "highway mileage",
-    title = "An example plot",
-    subtitle = "Theme based on theme_dark()"
-  ) + 
-  facet_wrap(vars(year)) + 
-  theme_voltron_dark()
-```
-]
-
-.pull-right[
-```{r run-ggplot-example-light, ref.label="define-ggplot-example-light", echo=FALSE}
-```
-]
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-dark-minimal
-
-## A slide with ggplot2 themes
-
-.pull-left[
-```{r define-ggplot-example-dark, fig.show='hide'}
-ggplot(mpg, aes(displ, hwy)) +
-  geom_point() +
-  labs(
-    x = "engine displacement", 
-    y = "highway mileage",
-    title = "An example plot",
-    subtitle = "Theme based on theme_dark()"
-  ) + 
-  facet_wrap(vars(year)) + 
-  theme_voltron_light()
-```
-]
-
-.pull-right[
-```{r run-ggplot-example-dark, ref.label="define-ggplot-example-dark", echo=FALSE}
-```
-]
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green
-
-## Using font-awesome icons in lists
-
-<!-- 
-embedding raw html is handy for things like using font-awesome icons as
-the bullets in list 
--->
-<ol class="fa-ul">
-  <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Completed task</li>
-  <li><span class="fa-li"><i class="fas fa-check-square"></i></span>Completed task</li>
-  <li><span class="fa-li"><i class="fas fa-spinner fa-pulse"></i></span>Work in progress</li>
-  <li><span class="fa-li"><i class="far fa-square"></i></span>Future work</li>
-</ol>
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-maximal
-
-## Final slide with key points and links
-
-.pull-left[
-- xaringan templates are cool
-- this is a work in progress
-- please send bug reports!
+- Apache Arrow is cool
+- Data wrangling in R is cool
+- {arrow} brings them together
 ]
 
 .pull-right[
@@ -658,5 +847,34 @@ class: theme-green-maximal
 
 
 
+---
+
+<!-- class: theme-green-minimal -->
+
+<!-- ## A slide with flair -->
+
+<!-- - the flair package allows fancy code decoration -->
+<!-- - docs: https://r-for-educators.github.io/flair/ -->
+
+<!-- ```{r filenames, include=FALSE, results='hide'} -->
+<!-- "analysis01_descriptive-statistics.R" -->
+<!-- "analysis02_preregistered-analysis.R" -->
+<!-- "notes01_realising-the-problem.txt" -->
+<!-- "analysis03_departing-from-the-plan.R" -->
+<!-- "notes02_tentative-write-up.docx" -->
+<!-- ``` -->
+
+<!-- .pull-left-wide[ -->
+<!-- <!--  -->
+<!-- The pull left wide class is used here for aesthetic purposes. It  -->
+<!-- prevents the background colour from the code block extending too  -->
+<!-- far rightwards -->
+<!-- --> -->
+<!-- ```{r, echo=FALSE, results='asis'} -->
+<!-- decorate_chunk("filenames") %>%  -->
+<!--   flair_rx("_[^.]*", background = "#000000") %>%  -->
+<!--   flair::knit_print.with_flair() -->
+<!-- ``` -->
+<!-- ] -->
 
 
