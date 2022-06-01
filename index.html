@@ -205,7 +205,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## How does R fit into the Arrow ecosystem?
+## Where does R fit (in Arrow)?
 
 &lt;img src="img/arrow-ecosystem-1.svg" width="70%" /&gt;
 
@@ -215,7 +215,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## How does R fit into the Arrow ecosystem?
+## Where does R fit (in Arrow)?
 
 &lt;img src="img/arrow-ecosystem-2.svg" width="70%" /&gt;
 
@@ -226,7 +226,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## How does R fit into the Arrow ecosystem?
+## Where does R fit (in Arrow)?
 
 &lt;img src="img/arrow-ecosystem-3.svg" width="70%" /&gt;
 
@@ -246,7 +246,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 &lt;img src="img/dplyr-backends-1.svg" width="70%" /&gt;
 
@@ -256,7 +256,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 &lt;img src="img/dplyr-backends-2.svg" width="70%" /&gt;
 
@@ -267,7 +267,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 &lt;img src="img/dplyr-backends-3.svg" width="70%" /&gt;
 
@@ -278,7 +278,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 &lt;img src="img/dplyr-backends-4.svg" width="70%" /&gt;
 
@@ -314,12 +314,425 @@ class: theme-dark-maximal
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
+class: theme-dark-minimal
+background-image: url("img/redd-Ra8VlGo0tyI-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 1: Get data
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
 class: theme-green-minimal
 
 ## The NYC taxi data
 
+- Original data released by New York City transit
+- Lightly curated version maintained by Voltron Data Labs
+- Pickup and dropoff locations and time, fees, tips, etc
+- Data set spans 2009 to 2022
+- Approximately ~1.7 billion rows in a single table
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## The NYC taxi data
+
+- We'll walk through an analysis pipeline:
 - Extract taxi rides from the three major airports
 - Visualise the destinations by taxi zone
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Obtaining the data
+
+.pull-left-wide[
+
+```r
+library(arrow)
+
+copy_files(
+  from = s3_bucket("ursa-labs-taxi-data-v2"),
+  to = "~/Datasets/nyc-taxi"
+)
+```
+
+- Warning: this is 69GB in total
+- It takes a long time!
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Obtaining the data
+
+.pull-left[
+
+- Data set spans many parquet files
+- Partitioned by year and month:
+
+
+```r
+fs::dir_tree("~/Datasets/nyc-taxi/")
+```
+]
+
+--
+
+.pull-right[
+.scroll-box-14[
+
+```
+## ~/Datasets/nyc-taxi/
+## ├── year=2009
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2010
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2011
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2012
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2013
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2014
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2015
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2016
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2017
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2018
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2019
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2020
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## ├── year=2021
+## │   ├── month=1
+## │   │   └── part-0.parquet
+## │   ├── month=10
+## │   │   └── part-0.parquet
+## │   ├── month=11
+## │   │   └── part-0.parquet
+## │   ├── month=12
+## │   │   └── part-0.parquet
+## │   ├── month=2
+## │   │   └── part-0.parquet
+## │   ├── month=3
+## │   │   └── part-0.parquet
+## │   ├── month=4
+## │   │   └── part-0.parquet
+## │   ├── month=5
+## │   │   └── part-0.parquet
+## │   ├── month=6
+## │   │   └── part-0.parquet
+## │   ├── month=7
+## │   │   └── part-0.parquet
+## │   ├── month=8
+## │   │   └── part-0.parquet
+## │   └── month=9
+## │       └── part-0.parquet
+## └── year=2022
+##     ├── month=1
+##     │   └── part-0.parquet
+##     └── month=2
+##         └── part-0.parquet
+```
+]
+]
 
 
 
@@ -489,12 +902,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-01-02 03:11:05               NA              NA                233
-## 2 2019-01-02 02:56:45               NA              NA                186
-## 3 2019-01-02 03:18:28               NA              NA                114
-## 4 2019-01-02 03:25:43               NA              NA                234
-## 5 2019-01-02 03:51:35               NA              NA                246
-## 6 2019-01-02 03:51:54               NA              NA                211
+## 1 2019-11-01 15:10:52               NA              NA                 79
+## 2 2019-11-01 15:03:26               NA              NA                 68
+## 3 2019-11-01 15:10:34               NA              NA                 68
+## 4 2019-11-01 15:10:34               NA              NA                 68
+## 5 2019-11-01 15:14:44               NA              NA                265
+## 6 2019-11-01 15:23:41               NA              NA                265
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -521,12 +934,30 @@ nyc_taxi |&gt;
 --&gt;
 
 
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-dark-minimal
+background-image: url("img/paolo-chiabrando-1fBiGUm_jbw-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 2: Find airports
+
+
+
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
 class: theme-green-minimal
 
 ## A secondary table
+
+- NYC TLC also supplies auxiliary files in the source data
+- One file is a CSV with extra information about taxi zones
 
 .pull-left-wide[
 
@@ -615,6 +1046,21 @@ airport_zones
 ## [1]   1 132 138
 ```
 ]
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-dark-minimal
+background-image: url("img/helena-lopes-bunLmHpu1hg-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 3: Wrangle data
+
 
 
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
@@ -774,7 +1220,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Wait, this errors????
+## Wait... why does this error?
 
 .pull-left[
 
@@ -812,7 +1258,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Wait, this errors????
+## Wait... why does this error?
 
 .pull-left[
 
@@ -920,21 +1366,34 @@ nyc_taxi |&gt;
 ## # A tibble: 22,228,736 × 6
 ##    pickup_datetime     dropoff_datetime    pickup_location_id dropoff_location_…
 ##    &lt;dttm&gt;              &lt;dttm&gt;                           &lt;int&gt;              &lt;int&gt;
-##  1 2016-12-03 12:34:02 2016-12-03 13:05:15                132                142
-##  2 2016-12-03 12:34:11 2016-12-03 12:55:07                132                 74
-##  3 2016-12-03 12:34:53 2016-12-03 12:58:41                132                255
-##  4 2016-12-03 12:37:54 2016-12-03 13:07:00                132                 87
-##  5 2016-12-03 12:38:22 2016-12-03 13:13:04                132                 43
-##  6 2016-12-03 12:38:26 2016-12-03 13:09:48                132                230
-##  7 2016-12-03 12:39:05 2016-12-03 12:55:30                132                 53
-##  8 2016-12-03 12:41:24 2016-12-03 12:52:55                132                205
-##  9 2016-12-03 12:43:06 2016-12-03 13:13:03                132                166
-## 10 2016-12-03 12:49:37 2016-12-03 13:28:23                132                265
+##  1 2016-10-01 21:25:28 2016-10-01 22:12:36                132                142
+##  2 2016-10-01 21:25:31 2016-10-01 21:54:12                132                  7
+##  3 2016-10-01 21:25:38 2016-10-01 21:54:09                138                181
+##  4 2016-10-01 21:25:44 2016-10-01 21:53:04                138                 17
+##  5 2016-10-01 21:25:47 2016-10-01 22:46:14                132                162
+##  6 2016-10-01 21:25:48 2016-10-01 22:22:16                132                230
+##  7 2016-10-01 21:25:53 2016-10-01 22:11:04                132                  4
+##  8 2016-10-01 21:26:04 2016-10-01 21:39:15                138                 56
+##  9 2016-10-01 21:26:15 2016-10-01 22:10:25                132                 25
+## 10 2016-10-01 21:26:18 2016-10-01 21:46:38                138                132
 ## # … with 22,228,726 more rows, and 2 more variables: dropoff_borough &lt;chr&gt;,
 ## #   dropoff_zone &lt;chr&gt;
 ```
 ]
 ]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-light-minimal
+background-image: url("img/chris-lawton-5IHz5WhosQE-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 4: Summarize
 
 
 

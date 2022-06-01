@@ -219,7 +219,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## How does R fit into the Arrow ecosystem?
+## Where does R fit (in Arrow)?
 
 ```{r}
 #| echo: false
@@ -233,7 +233,7 @@ knitr::include_graphics("img/arrow-ecosystem-1.svg")
 
 class: theme-green-minimal
 
-## How does R fit into the Arrow ecosystem?
+## Where does R fit (in Arrow)?
 
 ```{r}
 #| echo: false
@@ -248,7 +248,7 @@ knitr::include_graphics("img/arrow-ecosystem-2.svg")
 
 class: theme-green-minimal
 
-## How does R fit into the Arrow ecosystem?
+## Where does R fit (in Arrow)?
 
 ```{r}
 #| echo: false
@@ -272,7 +272,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 ```{r}
 #| echo: false
@@ -286,7 +286,7 @@ knitr::include_graphics("img/dplyr-backends-1.svg")
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 ```{r}
 #| echo: false
@@ -301,7 +301,7 @@ knitr::include_graphics("img/dplyr-backends-2.svg")
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 ```{r}
 #| echo: false
@@ -316,7 +316,7 @@ knitr::include_graphics("img/dplyr-backends-3.svg")
 
 class: theme-green-minimal
 
-## How does Arrow fit into the R ecosystem?
+## Where does Arrow fit (in R)?
 
 ```{r}
 #| echo: false
@@ -356,12 +356,91 @@ class: theme-dark-maximal
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
+class: theme-dark-minimal
+background-image: url("img/redd-Ra8VlGo0tyI-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 1: Get data
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
 class: theme-green-minimal
 
 ## The NYC taxi data
 
+- Original data released by New York City transit
+- Lightly curated version maintained by Voltron Data Labs
+- Pickup and dropoff locations and time, fees, tips, etc
+- Data set spans 2009 to 2022
+- Approximately ~1.7 billion rows in a single table
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## The NYC taxi data
+
+- We'll walk through an analysis pipeline:
 - Extract taxi rides from the three major airports
 - Visualise the destinations by taxi zone
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Obtaining the data
+
+.pull-left-wide[
+```{r download-nyc-taxi, eval=FALSE}
+library(arrow)
+
+copy_files(
+  from = s3_bucket("ursa-labs-taxi-data-v2"),
+  to = "~/Datasets/nyc-taxi"
+)
+```
+
+- Warning: this is 69GB in total
+- It takes a long time!
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Obtaining the data
+
+.pull-left[
+
+- Data set spans many parquet files
+- Partitioned by year and month:
+
+```{r download-nyc-taxi-2, eval=FALSE}
+fs::dir_tree("~/Datasets/nyc-taxi/")
+```
+]
+
+--
+
+.pull-right[
+.scroll-box-14[
+```{r, ref.label="download-nyc-taxi-2", echo=FALSE}
+```
+]
+]
 
 
 
@@ -477,12 +556,30 @@ decorate_chunk("nyc-taxi-filter-3") |>
 -->
 
 
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-dark-minimal
+background-image: url("img/paolo-chiabrando-1fBiGUm_jbw-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 2: Find airports
+
+
+
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
 class: theme-green-minimal
 
 ## A secondary table
+
+- NYC TLC also supplies auxiliary files in the source data
+- One file is a CSV with extra information about taxi zones
 
 .pull-left-wide[
 ```{r nyc-taxi-zones}
@@ -537,6 +634,21 @@ airport_zones <- nyc_taxi_zones |>
 airport_zones
 ```
 ]
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-dark-minimal
+background-image: url("img/helena-lopes-bunLmHpu1hg-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 3: Wrangle data
+
 
 
 <!----------------------------- SLIDE BREAK ----------------------------->
@@ -664,7 +776,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Wait, this errors????
+## Wait... why does this error?
 
 .pull-left[
 ```{r, ref.label="nyc-taxi-join-2", echo=TRUE, eval=FALSE}
@@ -683,7 +795,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Wait, this errors????
+## Wait... why does this error?
 
 .pull-left[
 ```{r, ref.label="nyc-taxi-join-2", echo=TRUE, eval=FALSE}
@@ -762,10 +874,23 @@ nyc_taxi |>
 --
 .pull-right[
 .scroll-output[
-```{r, ref.label="nyc-taxi-join-3", echo=FALSE, error=TRUE, warning=FALSE}
+```{r nyc-taxi-join-3-cache, ref.label="nyc-taxi-join-3", echo=FALSE, error=TRUE, warning=FALSE, cache=TRUE}
 ```
 ]
 ]
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-light-minimal
+background-image: url("img/chris-lawton-5IHz5WhosQE-unsplash.jpg")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
+
+## Step 4: Summarize
 
 
 
