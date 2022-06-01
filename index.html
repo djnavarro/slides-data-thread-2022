@@ -248,6 +248,23 @@ class: theme-green-minimal
 
 ## Where does Arrow fit (in R)?
 
+- Read and write tabular data files, e.g., parquet, feather, csv
+- Read and write files in Amazon S3 buckets
+- Analyze, process, and write multi-file, larger-than-memory datasets
+- ... many other things...
+--
+
+- Manipulate and analyze Arrow data using dplyr verbs
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Where does Arrow fit (in R)?
+
 &lt;img src="img/dplyr-backends-1.svg" width="70%" /&gt;
 
 
@@ -813,7 +830,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Select and filter
+## Using dplyr verbs: Select and filter
 
 .pull-left-wide[
 
@@ -840,12 +857,62 @@ nyc_taxi |&gt;
 ]
 
 
+
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
 class: theme-green-minimal
 
-## Select and filter
+## Using dplyr verbs: Select and filter
+
+.pull-left-wide[
+
+```r
+nyc_taxi |&gt; 
+  filter(year == 2019) |&gt;
+  select(matches("pickup"), matches("dropoff")) 
+```
+]
+
+.pull-left-wide[
+- The output is a query
+- It has not yet been evaluated
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Should we evaluate the query?
+
+.pull-left-wide[
+
+```r
+nyc_taxi |&gt; 
+  filter(year == 2019) |&gt;
+  select(matches("pickup"), matches("dropoff")) |&gt;
+  collect()
+```
+]
+
+.pull-left-wide[
+- Calling `compute()` evaluates in Arrow
+- Calling `collect()` evaluates and returns to R
+]
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Should we evaluate the query?
 
 .pull-left-wide[
 
@@ -861,23 +928,15 @@ nyc_taxi |&gt;
 ```
 ]
 
+
 --
 
 .pull-left-wide[
 
-
-```r
-nyc_taxi |&gt; 
-  nrow()
-```
-
-```
-## [1] 1672590319
-```
+- 84 million rows is more than I want
+- Perhaps better to collect a subset...
 
 ]
-
-
 
 
 
@@ -887,7 +946,27 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Spatial data as "location_id"
+## Should we evaluate the query?
+
+
+```r
+nyc_taxi |&gt; 
+  filter(year == 2019) |&gt;
+  select(matches("pickup"), matches("dropoff")) |&gt;
+  head() |&gt;
+  collect()
+```
+
+- Only collects the first few rows
+- Can be evaluated efficiently
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Aha! Spatial data as "location_id"
 
 
 ```r
@@ -921,12 +1000,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-10-02 06:41:22               NA              NA                144
-## 2 2019-10-02 06:53:46               NA              NA                246
-## 3 2019-10-02 06:05:22               NA              NA                158
-## 4 2019-10-02 06:19:59               NA              NA                261
-## 5 2019-10-02 06:45:45               NA              NA                229
-## 6 2019-10-02 06:03:44               NA              NA                164
+## 1 2019-12-01 22:45:18               NA              NA                114
+## 2 2019-12-01 22:04:02               NA              NA                263
+## 3 2019-12-01 22:20:38               NA              NA                 75
+## 4 2019-12-01 22:46:36               NA              NA                 75
+## 5 2019-12-01 22:13:05               NA              NA                107
+## 6 2019-12-01 22:32:19               NA              NA                231
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 
@@ -1068,6 +1147,49 @@ background-position: left
 
 class: theme-green-minimal
 
+## Mutate...
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  )
+```
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Mutate, filter...
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  ) |&gt;
+  filter(pickup_airport == TRUE)
+```
+]
+
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
 ## Mutate, filter, and select
 
 .pull-left[
@@ -1113,33 +1235,26 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Mutate, filter, and select
+## (Reorganize a little...)
 
 .pull-left[
 
 ```r
 nyc_taxi |&gt; 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
+  filter(
+    pickup_location_id %in% airport_zones
   ) |&gt;
-  filter(pickup_airport == TRUE) |&gt;
   select(
     matches("datetime"), 
     matches("location_id")
-  ) |&gt; 
-  nrow()
-```
-
-```
-## [1] 22228736
+  )
 ```
 ]
 
-
-
-
-
+.pull-right[
+- Same query as last time
+- (i.e., filter without unneeded mutate)
+]
 
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
@@ -1297,7 +1412,41 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Explicit type casting
+## Using schemas
+
+.pull-left[
+
+```r
+schema(
+  dropoff_location_id = int64(),
+  dropoff_borough = utf8(),
+  dropoff_zone = utf8()
+)
+```
+
+```
+## Schema
+## dropoff_location_id: int64
+## dropoff_borough: string
+## dropoff_zone: string
+```
+]
+
+--
+
+.pull-right[
+- Schemas provide names and explicit types
+- Used to guide data import 
+]
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Using schemas
 
 .pull-left[
 
@@ -1403,7 +1552,58 @@ background-position: left
 
 class: theme-green-minimal
 
-## Aggregate by zone
+## Our query so far
+
+.pull-left[
+
+```r
+nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(nyc_taxi_zones_2)
+```
+]
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Count rides by dropoff zone
+
+.pull-left[
+
+```r
+nyc_taxi_zone_counts &lt;- nyc_taxi |&gt; 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |&gt;
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |&gt; 
+  left_join(nyc_taxi_zones_2) |&gt;
+  count(dropoff_zone) |&gt;
+  arrange(desc(n)) |&gt;
+  collect()
+```
+]
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Count rides by dropoff zone
 
 .pull-left[
 
@@ -1454,7 +1654,7 @@ nyc_taxi_zone_counts
 
 class: theme-green-minimal
 
-## ... and a tiny bit more work ...
+## (A tiny bit more work)
 
 
 
@@ -1484,7 +1684,7 @@ nyc_taxi_zones_spatial |&gt;
 
 class: theme-green-minimal
 
-## Produces a nice visualisation
+## A nice visualization
 
 &lt;img src="index_files/figure-html/taxi-zones-map-1.png" width="750" /&gt;
 

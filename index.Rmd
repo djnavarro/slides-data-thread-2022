@@ -274,6 +274,23 @@ class: theme-green-minimal
 
 ## Where does Arrow fit (in R)?
 
+- Read and write tabular data files, e.g., parquet, feather, csv
+- Read and write files in Amazon S3 buckets
+- Analyze, process, and write multi-file, larger-than-memory datasets
+- ... many other things...
+--
+
+- Manipulate and analyze Arrow data using dplyr verbs
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Where does Arrow fit (in R)?
+
 ```{r}
 #| echo: false
 #| out-width: 70%
@@ -489,7 +506,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Select and filter
+## Using dplyr verbs: Select and filter
 
 .pull-left-wide[
 ```{r nyc-taxi-filter}
@@ -500,12 +517,60 @@ nyc_taxi |>
 ]
 
 
+
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
 class: theme-green-minimal
 
-## Select and filter
+## Using dplyr verbs: Select and filter
+
+.pull-left-wide[
+```{r nyc-taxi-filter-2a, eval=FALSE}
+nyc_taxi |> 
+  filter(year == 2019) |>
+  select(matches("pickup"), matches("dropoff")) 
+```
+]
+
+.pull-left-wide[
+- The output is a query
+- It has not yet been evaluated
+]
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Should we evaluate the query?
+
+.pull-left-wide[
+```{r nyc-taxi-filter-2b, eval=FALSE}
+nyc_taxi |> 
+  filter(year == 2019) |>
+  select(matches("pickup"), matches("dropoff")) |>
+  collect()
+```
+]
+
+.pull-left-wide[
+- Calling `compute()` evaluates in Arrow
+- Calling `collect()` evaluates and returns to R
+]
+
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Should we evaluate the query?
 
 .pull-left-wide[
 ```{r nyc-taxi-filter-2}
@@ -516,18 +581,15 @@ nyc_taxi |>
 ```
 ]
 
+
 --
 
 .pull-left-wide[
 
-```{r}
-nyc_taxi |> 
-  nrow()
-```
+- 84 million rows is more than I want
+- Perhaps better to collect a subset...
 
 ]
-
-
 
 
 
@@ -537,7 +599,26 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Spatial data as "location_id"
+## Should we evaluate the query?
+
+```{r nyc-taxi-filter-3a, eval=FALSE}
+nyc_taxi |> 
+  filter(year == 2019) |>
+  select(matches("pickup"), matches("dropoff")) |>
+  head() |>
+  collect()
+```
+
+- Only collects the first few rows
+- Can be evaluated efficiently
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Aha! Spatial data as "location_id"
 
 ```{r nyc-taxi-filter-3}
 nyc_taxi |> 
@@ -656,6 +737,47 @@ background-position: left
 
 class: theme-green-minimal
 
+## Mutate...
+
+.pull-left[
+```{r nyc-taxi-filter-4a, eval=FALSE}
+nyc_taxi |> 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  )
+```
+]
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Mutate, filter...
+
+.pull-left[
+```{r nyc-taxi-filter-4b, eval=FALSE}
+nyc_taxi |> 
+  mutate(
+    pickup_airport = 
+      pickup_location_id %in% airport_zones
+  ) |>
+  filter(pickup_airport == TRUE)
+```
+]
+
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
 ## Mutate, filter, and select
 
 .pull-left[
@@ -687,28 +809,25 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Mutate, filter, and select
+## (Reorganize a little...)
 
 .pull-left[
-```{r nyc-taxi-filter-5}
+```{r nyc-taxi-join-1a, eval=FALSE}
 nyc_taxi |> 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
+  filter(
+    pickup_location_id %in% airport_zones
   ) |>
-  filter(pickup_airport == TRUE) |>
   select(
     matches("datetime"), 
     matches("location_id")
-  ) |> 
-  nrow()
+  )
 ```
 ]
 
-
-
-
-
+.pull-right[
+- Same query as last time
+- (i.e., filter without unneeded mutate)
+]
 
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
@@ -818,7 +937,33 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Explicit type casting
+## Using schemas
+
+.pull-left[
+```{r schema}
+schema(
+  dropoff_location_id = int64(),
+  dropoff_borough = utf8(),
+  dropoff_zone = utf8()
+)
+```
+]
+
+--
+
+.pull-right[
+- Schemas provide names and explicit types
+- Used to guide data import 
+]
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Using schemas
 
 .pull-left[
 ```{r type-casting, eval=FALSE}
@@ -900,7 +1045,56 @@ background-position: left
 
 class: theme-green-minimal
 
-## Aggregate by zone
+## Our query so far
+
+.pull-left[
+```{r nyc-taxi-join-4a, eval=FALSE}
+nyc_taxi |> 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |> 
+  left_join(nyc_taxi_zones_2)
+```
+]
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Count rides by dropoff zone
+
+.pull-left[
+```{r nyc-taxi-join-4b, eval=FALSE}
+nyc_taxi_zone_counts <- nyc_taxi |> 
+  filter(
+    pickup_location_id %in% airport_zones
+  ) |>
+  select(
+    matches("datetime"), 
+    matches("location_id")
+  ) |> 
+  left_join(nyc_taxi_zones_2) |>
+  count(dropoff_zone) |>
+  arrange(desc(n)) |>
+  collect()
+```
+]
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Count rides by dropoff zone
 
 .pull-left[
 ```{r nyc-taxi-join-4, eval=FALSE}
@@ -935,7 +1129,7 @@ nyc_taxi_zone_counts
 
 class: theme-green-minimal
 
-## ... and a tiny bit more work ...
+## (A tiny bit more work)
 
 ```{r hack, echo=FALSE}
 theme_custom <- function() {
@@ -976,7 +1170,7 @@ nyc_taxi_zones_spatial |>
 
 class: theme-green-minimal
 
-## Produces a nice visualisation
+## A nice visualization
 
 ```{r taxi-zones-map, ref.label="nyc-taxi-spatial", out.width=750, echo=FALSE}
 ```
