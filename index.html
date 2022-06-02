@@ -249,8 +249,14 @@ class: theme-green-minimal
 ## Where does Arrow fit (in R)?
 
 - Read and write tabular data files, e.g., parquet, feather, csv
+--
+
 - Read and write files in Amazon S3 buckets
+--
+
 - Analyze, process, and write multi-file, larger-than-memory datasets
+--
+
 - ... many other things...
 --
 
@@ -347,24 +353,17 @@ class: theme-green-minimal
 
 ## The NYC taxi data
 
-- Original data released by New York City transit
-- Lightly curated version maintained by Voltron Data Labs
-- Pickup and dropoff locations and time, fees, tips, etc
-- Data set spans 2009 to 2022
-- Approximately ~1.7 billion rows in a single table
+- The data set:
 
+  - Original data from the New York City Taxi and Limosine Service
+  - Pickup and dropoff locations and time, fees, tips, etc
+  - Approximately ~1.7 billion rows in a single table, from 2009 to 2022
+  
+--
 
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## The NYC taxi data
-
-- We'll walk through an analysis pipeline:
-- Extract taxi rides from the three major airports
-- Visualise the destinations by taxi zone
+- The case study:
+  - Extract taxi rides from the three major airports
+  - Visualise the destinations by taxi zone
 
 
 
@@ -401,8 +400,9 @@ class: theme-green-minimal
 
 .pull-left[
 
-- Data set spans many parquet files
-- Partitioned by year and month:
+- NYC taxi is a multi-file data set
+  - 158 separate parquet files
+  - Partitioned by year and month
 
 
 ```r
@@ -804,7 +804,6 @@ nyc_taxi
 
 
 
-
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
@@ -813,6 +812,11 @@ class: theme-green-minimal
 ## Opening a dataset
 
 .pull-left-wide[
+- Is it really 1.7 billion rows?
+]
+--
+.pull-left-wide[
+- Absolutely yes!
 
 ```r
 nyc_taxi |&gt; 
@@ -822,6 +826,50 @@ nyc_taxi |&gt;
 ```
 ## [1] 1672590319
 ```
+]
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+- Is it really 1.7 billion rows? (Yes)
+- Is all this data somehow loaded in R?
+]
+--
+.pull-left-wide[
+- Absolutely not!
+
+```r
+nyc_taxi |&gt; 
+  lobstr::obj_size()
+```
+
+```
+## 261,088 B
+```
+]
+
+
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+- Is it really 1.7 billion rows? (Yes)
+- Is all this data somehow loaded in R? (No)
+- Is there a trick? (Yes: read files as needed)
 ]
 
 
@@ -839,6 +887,10 @@ nyc_taxi |&gt;
   filter(year == 2019) |&gt;
   select(matches("pickup"), matches("dropoff")) 
 ```
+]
+--
+
+.pull-left-wide[
 
 ```
 ## FileSystemDataset (query)
@@ -886,7 +938,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Should we evaluate the query?
+## Should we evaluate the query "as is"?
 
 .pull-left-wide[
 
@@ -901,6 +953,7 @@ nyc_taxi |&gt;
 .pull-left-wide[
 - Calling `compute()` evaluates in Arrow
 - Calling `collect()` evaluates and returns to R
+- Let's quickly check something...
 ]
 
 
@@ -912,7 +965,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Should we evaluate the query?
+## Should we evaluate the query  "as is"?
 
 .pull-left-wide[
 
@@ -929,8 +982,6 @@ nyc_taxi |&gt;
 ]
 
 
---
-
 .pull-left-wide[
 
 - 84 million rows is more than I want
@@ -946,7 +997,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Should we evaluate the query?
+## Should we evaluate the query "as is"?
 
 
 ```r
@@ -957,6 +1008,7 @@ nyc_taxi |&gt;
   collect()
 ```
 
+- Using `head()` allows query optimisation
 - Only collects the first few rows
 - Can be evaluated efficiently
 
@@ -966,7 +1018,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Aha! Spatial data as "location_id"
+## Aha! Spatial information in "location_id"
 
 
 ```r
@@ -981,12 +1033,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-11-01 15:10:52               NA              NA                 79
-## 2 2019-11-01 15:03:26               NA              NA                 68
-## 3 2019-11-01 15:10:34               NA              NA                 68
-## 4 2019-11-01 15:10:34               NA              NA                 68
-## 5 2019-11-01 15:14:44               NA              NA                265
-## 6 2019-11-01 15:23:41               NA              NA                265
+## 1 2019-01-02 03:11:05               NA              NA                233
+## 2 2019-01-02 02:56:45               NA              NA                186
+## 3 2019-01-02 03:18:28               NA              NA                114
+## 4 2019-01-02 03:25:43               NA              NA                234
+## 5 2019-01-02 03:51:35               NA              NA                246
+## 6 2019-01-02 03:51:54               NA              NA                211
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -1407,12 +1459,34 @@ nyc_taxi |&gt;
 
 
 
+
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
 class: theme-green-minimal
 
-## Using schemas
+## Solution: use schemas
+
+- The problem:
+
+  - Data types in R and Arrow are not identical
+  - The data import defaults in {arrow} are good but...
+  - ... they don't always work 
+
+--
+  
+- The solution:  
+
+  - Schemas describe types for each variable
+  - User supplies types explicitly
+
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-green-minimal
+
+## Solution: use schemas
 
 .pull-left[
 
@@ -1432,12 +1506,6 @@ schema(
 ```
 ]
 
---
-
-.pull-right[
-- Schemas provide names and explicit types
-- Used to guide data import 
-]
 
 
 
@@ -1446,7 +1514,7 @@ schema(
 
 class: theme-green-minimal
 
-## Using schemas
+## Solution: use schemas
 
 .pull-left[
 

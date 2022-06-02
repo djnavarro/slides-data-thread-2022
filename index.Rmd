@@ -275,8 +275,14 @@ class: theme-green-minimal
 ## Where does Arrow fit (in R)?
 
 - Read and write tabular data files, e.g., parquet, feather, csv
+--
+
 - Read and write files in Amazon S3 buckets
+--
+
 - Analyze, process, and write multi-file, larger-than-memory datasets
+--
+
 - ... many other things...
 --
 
@@ -389,24 +395,17 @@ class: theme-green-minimal
 
 ## The NYC taxi data
 
-- Original data released by New York City transit
-- Lightly curated version maintained by Voltron Data Labs
-- Pickup and dropoff locations and time, fees, tips, etc
-- Data set spans 2009 to 2022
-- Approximately ~1.7 billion rows in a single table
+- The data set:
 
+  - Original data from the New York City Taxi and Limosine Service
+  - Pickup and dropoff locations and time, fees, tips, etc
+  - Approximately ~1.7 billion rows in a single table, from 2009 to 2022
+  
+--
 
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## The NYC taxi data
-
-- We'll walk through an analysis pipeline:
-- Extract taxi rides from the three major airports
-- Visualise the destinations by taxi zone
+- The case study:
+  - Extract taxi rides from the three major airports
+  - Visualise the destinations by taxi zone
 
 
 
@@ -442,8 +441,9 @@ class: theme-green-minimal
 
 .pull-left[
 
-- Data set spans many parquet files
-- Partitioned by year and month:
+- NYC taxi is a multi-file data set
+  - 158 separate parquet files
+  - Partitioned by year and month
 
 ```{r download-nyc-taxi-2, eval=FALSE}
 fs::dir_tree("~/Datasets/nyc-taxi/")
@@ -485,6 +485,27 @@ nyc_taxi
 
 
 
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+- Is it really 1.7 billion rows?
+]
+--
+.pull-left-wide[
+- Absolutely yes!
+```{r nyc-taxi-rows}
+nyc_taxi |> 
+  nrow()
+```
+]
+
+
+
 
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
@@ -494,10 +515,32 @@ class: theme-green-minimal
 ## Opening a dataset
 
 .pull-left-wide[
-```{r nyc-taxi-rows}
+- Is it really 1.7 billion rows? (Yes)
+- Is all this data somehow loaded in R?
+]
+--
+.pull-left-wide[
+- Absolutely not!
+```{r nyc-taxi-objsize}
 nyc_taxi |> 
-  nrow()
+  lobstr::obj_size()
 ```
+]
+
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Opening a dataset
+
+.pull-left-wide[
+- Is it really 1.7 billion rows? (Yes)
+- Is all this data somehow loaded in R? (No)
+- Is there a trick? (Yes: read files as needed)
 ]
 
 
@@ -509,10 +552,16 @@ class: theme-green-minimal
 ## Using dplyr verbs: Select and filter
 
 .pull-left-wide[
-```{r nyc-taxi-filter}
+```{r nyc-taxi-filter, eval=FALSE}
 nyc_taxi |> 
   filter(year == 2019) |>
   select(matches("pickup"), matches("dropoff")) 
+```
+]
+--
+
+.pull-left-wide[
+```{r, ref.label="nyc-taxi-filter", echo=FALSE}
 ```
 ]
 
@@ -545,7 +594,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Should we evaluate the query?
+## Should we evaluate the query "as is"?
 
 .pull-left-wide[
 ```{r nyc-taxi-filter-2b, eval=FALSE}
@@ -559,6 +608,7 @@ nyc_taxi |>
 .pull-left-wide[
 - Calling `compute()` evaluates in Arrow
 - Calling `collect()` evaluates and returns to R
+- Let's quickly check something...
 ]
 
 
@@ -570,7 +620,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Should we evaluate the query?
+## Should we evaluate the query  "as is"?
 
 .pull-left-wide[
 ```{r nyc-taxi-filter-2}
@@ -581,8 +631,6 @@ nyc_taxi |>
 ```
 ]
 
-
---
 
 .pull-left-wide[
 
@@ -599,7 +647,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Should we evaluate the query?
+## Should we evaluate the query "as is"?
 
 ```{r nyc-taxi-filter-3a, eval=FALSE}
 nyc_taxi |> 
@@ -609,6 +657,7 @@ nyc_taxi |>
   collect()
 ```
 
+- Using `head()` allows query optimisation
 - Only collects the first few rows
 - Can be evaluated efficiently
 
@@ -618,7 +667,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Aha! Spatial data as "location_id"
+## Aha! Spatial information in "location_id"
 
 ```{r nyc-taxi-filter-3}
 nyc_taxi |> 
@@ -932,12 +981,34 @@ class: theme-green-minimal
 
 
 
+
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
 class: theme-green-minimal
 
-## Using schemas
+## Solution: use schemas
+
+- The problem:
+
+  - Data types in R and Arrow are not identical
+  - The data import defaults in {arrow} are good but...
+  - ... they don't always work 
+
+--
+  
+- The solution:  
+
+  - Schemas describe types for each variable
+  - User supplies types explicitly
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Solution: use schemas
 
 .pull-left[
 ```{r schema}
@@ -949,12 +1020,6 @@ schema(
 ```
 ]
 
---
-
-.pull-right[
-- Schemas provide names and explicit types
-- Used to guide data import 
-]
 
 
 
@@ -963,7 +1028,7 @@ schema(
 
 class: theme-green-minimal
 
-## Using schemas
+## Solution: use schemas
 
 .pull-left[
 ```{r type-casting, eval=FALSE}
