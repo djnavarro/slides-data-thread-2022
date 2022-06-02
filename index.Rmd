@@ -710,6 +710,7 @@ class: theme-green-minimal
 
 - NYC TLC also supplies auxiliary files in the source data
 - One file is a CSV with extra information about taxi zones
+- It's a small table, we can handle it natively in R:
 
 .pull-left-wide[
 ```{r nyc-taxi-zones}
@@ -944,7 +945,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Wait... why does this error?
+## Wait... why does the join throw an error?
 
 .pull-left[
 ```{r, ref.label="nyc-taxi-join-2", echo=TRUE, eval=FALSE}
@@ -963,7 +964,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Wait... why does this error?
+## Wait... why does the join throw an error?
 
 .pull-left[
 ```{r, ref.label="nyc-taxi-join-2", echo=TRUE, eval=FALSE}

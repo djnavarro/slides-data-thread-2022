@@ -1052,12 +1052,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-12-01 22:45:18               NA              NA                114
-## 2 2019-12-01 22:04:02               NA              NA                263
-## 3 2019-12-01 22:20:38               NA              NA                 75
-## 4 2019-12-01 22:46:36               NA              NA                 75
-## 5 2019-12-01 22:13:05               NA              NA                107
-## 6 2019-12-01 22:32:19               NA              NA                231
+## 1 2019-01-02 03:11:05               NA              NA                233
+## 2 2019-01-02 02:56:45               NA              NA                186
+## 3 2019-01-02 03:18:28               NA              NA                114
+## 4 2019-01-02 03:25:43               NA              NA                234
+## 5 2019-01-02 03:51:35               NA              NA                246
+## 6 2019-01-02 03:51:54               NA              NA                211
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 
@@ -1089,6 +1089,7 @@ class: theme-green-minimal
 
 - NYC TLC also supplies auxiliary files in the source data
 - One file is a CSV with extra information about taxi zones
+- It's a small table, we can handle it natively in R:
 
 .pull-left-wide[
 
@@ -1387,7 +1388,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Wait... why does this error?
+## Wait... why does the join throw an error?
 
 .pull-left[
 
@@ -1425,7 +1426,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Wait... why does this error?
+## Wait... why does the join throw an error?
 
 .pull-left[
 
