@@ -200,8 +200,58 @@ class: theme-green-minimal
 
 ## Columnar formats are efficient
 
-- Self-similarity among column elements
-- Filtering operations are faster
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/simd-1.svg")
+```
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Columnar formats are efficient
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/simd-2.svg")
+```
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Columnar formats are efficient
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/simd-3.svg")
+```
+
+
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-green-minimal
+
+## Columnar formats are efficient
+
+```{r}
+#| echo: false
+#| out-width: 70%
+knitr::include_graphics("img/simd-4.svg")
+```
+
+
 
 
 
