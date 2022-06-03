@@ -633,6 +633,8 @@ nyc_taxi |>
 - Only collects the first few rows
 - Can be evaluated efficiently
 
+<!-- TODO: this slide is untidy -->
+
 
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
@@ -754,84 +756,13 @@ background-position: left
 
 
 
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## Mutate...
-
-.pull-left[
-```{r nyc-taxi-filter-4a, eval=FALSE}
-nyc_taxi |> 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
-  )
-```
-]
-
-
 
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
 class: theme-green-minimal
 
-## Mutate, filter...
-
-.pull-left[
-```{r nyc-taxi-filter-4b, eval=FALSE}
-nyc_taxi |> 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
-  ) |>
-  filter(pickup_airport == TRUE)
-```
-]
-
-
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## Mutate, filter, and select
-
-.pull-left[
-```{r nyc-taxi-filter-4, eval=FALSE}
-nyc_taxi |> 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
-  ) |>
-  filter(pickup_airport == TRUE) |>
-  select(
-    matches("datetime"), 
-    matches("location_id")
-  )
-```
-]
---
-.pull-right[
-.scroll-output[
-```{r, ref.label="nyc-taxi-filter-4", echo=FALSE}
-```
-]
-]
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## (Reorganize a little...)
+## Let's find the airport pickups...
 
 .pull-left[
 ```{r nyc-taxi-join-1a, eval=FALSE}
@@ -846,9 +777,11 @@ nyc_taxi |>
 ```
 ]
 
+--
+
 .pull-right[
-- Same query as last time
-- (i.e., filter without unneeded mutate)
+```{r, ref.label="nyc-taxi-join-1a", echo=FALSE}
+```
 ]
 
 <!----------------------------- SLIDE BREAK ----------------------------->
@@ -856,7 +789,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Database joins
+## We need to use database joins
 
 .pull-left[
 ```{r nyc-taxi-join, eval=FALSE}
@@ -889,7 +822,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Database joins
+## We need to use database joins
 
 .pull-left[
 ```{r nyc-taxi-join-2, eval=FALSE}

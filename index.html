@@ -983,6 +983,8 @@ nyc_taxi |&gt;
 - Only collects the first few rows
 - Can be evaluated efficiently
 
+&lt;!-- TODO: this slide is untidy --&gt;
+
 
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
@@ -1004,12 +1006,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-10-01 22:25:25               NA              NA                237
-## 2 2019-10-01 22:19:14               NA              NA                238
-## 3 2019-10-01 22:42:19               NA              NA                125
-## 4 2019-10-01 22:46:56               NA              NA                 90
-## 5 2019-10-01 22:05:24               NA              NA                148
-## 6 2019-10-01 22:39:12               NA              NA                 87
+## 1 2019-11-01 15:10:52               NA              NA                 79
+## 2 2019-11-01 15:03:26               NA              NA                 68
+## 3 2019-11-01 15:10:34               NA              NA                 68
+## 4 2019-11-01 15:10:34               NA              NA                 68
+## 5 2019-11-01 15:14:44               NA              NA                265
+## 6 2019-11-01 15:23:41               NA              NA                265
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -1023,12 +1025,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-11-01 15:10:52               NA              NA                 79
-## 2 2019-11-01 15:03:26               NA              NA                 68
-## 3 2019-11-01 15:10:34               NA              NA                 68
-## 4 2019-11-01 15:10:34               NA              NA                 68
-## 5 2019-11-01 15:14:44               NA              NA                265
-## 6 2019-11-01 15:23:41               NA              NA                265
+## 1 2019-01-01 14:00:28               NA              NA                 68
+## 2 2019-01-01 14:56:13               NA              NA                 48
+## 3 2019-01-01 14:03:55               NA              NA                141
+## 4 2019-01-01 14:04:37               NA              NA                100
+## 5 2019-01-01 14:13:15               NA              NA                246
+## 6 2019-01-01 14:19:54               NA              NA                186
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 
@@ -1166,100 +1168,13 @@ background-position: left
 
 
 
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## Mutate...
-
-.pull-left[
-
-```r
-nyc_taxi |&gt; 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
-  )
-```
-]
-
-
 
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
 class: theme-green-minimal
 
-## Mutate, filter...
-
-.pull-left[
-
-```r
-nyc_taxi |&gt; 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
-  ) |&gt;
-  filter(pickup_airport == TRUE)
-```
-]
-
-
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## Mutate, filter, and select
-
-.pull-left[
-
-```r
-nyc_taxi |&gt; 
-  mutate(
-    pickup_airport = 
-      pickup_location_id %in% airport_zones
-  ) |&gt;
-  filter(pickup_airport == TRUE) |&gt;
-  select(
-    matches("datetime"), 
-    matches("location_id")
-  )
-```
-]
---
-.pull-right[
-.scroll-output[
-
-```
-## FileSystemDataset (query)
-## pickup_datetime: timestamp[ms]
-## dropoff_datetime: timestamp[ms]
-## pickup_location_id: int64
-## dropoff_location_id: int64
-## 
-## * Filter: (is_in(pickup_location_id, {value_set=int32:[
-##   1,
-##   132,
-##   138
-## ], skip_nulls=true}) == true)
-## See $.data for the source Arrow object
-```
-]
-]
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## (Reorganize a little...)
+## Let's find the airport pickups...
 
 .pull-left[
 
@@ -1275,9 +1190,24 @@ nyc_taxi |&gt;
 ```
 ]
 
+--
+
 .pull-right[
-- Same query as last time
-- (i.e., filter without unneeded mutate)
+
+```
+## FileSystemDataset (query)
+## pickup_datetime: timestamp[ms]
+## dropoff_datetime: timestamp[ms]
+## pickup_location_id: int64
+## dropoff_location_id: int64
+## 
+## * Filter: is_in(pickup_location_id, {value_set=int32:[
+##   1,
+##   132,
+##   138
+## ], skip_nulls=true})
+## See $.data for the source Arrow object
+```
 ]
 
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
@@ -1285,7 +1215,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Database joins
+## We need to use database joins
 
 .pull-left[
 
@@ -1330,7 +1260,7 @@ nyc_taxi |&gt;
 
 class: theme-green-minimal
 
-## Database joins
+## We need to use database joins
 
 .pull-left[
 
