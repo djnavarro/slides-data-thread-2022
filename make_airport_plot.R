@@ -116,6 +116,6 @@ pic2 <- pic +
   ) +
   NULL
 
-ggsave("img/airport_map.png", pic2, width = 10, dpi = 300)
+ggsave("img/airport_map.png", pic2, width = 10, dpi = 300, bg = "#839496")
 
 

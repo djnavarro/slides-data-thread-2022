@@ -1131,7 +1131,7 @@ pic <- dat |>
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-green-minimal
+class: theme-light-minimal
 background-image: url("img/airport_map.png")
 background-size: cover
 background-repeat: no-repeat
