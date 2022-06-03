@@ -355,8 +355,19 @@ class: theme-green-minimal
 
 ## How do new users get started?
 
-- Simply by typing `install.packages("arrow")`
-- Links to resources go here
+- Install arrow by typing `install.packages("arrow")`
+- To use dplyr pipelines both arrow and dplyr must be loaded
+
+```{r, message=FALSE}
+library(arrow)
+library(dplyr)
+```
+
+--
+
+- Installation resources:
+  - [arrow.apache.org/docs/r](https://arrow.apache.org/docs/r/)
+  - [blog.djnavarro.net/starting-apache-arrow-in-r](https://blog.djnavarro.net/starting-apache-arrow-in-r/)
 
 
 
@@ -1102,37 +1113,18 @@ class: theme-green-minimal
 
 ## (A tiny bit more work)
 
-```{r hack, echo=FALSE}
-theme_custom <- function() {
-  theme_voltron_light() + 
-  theme(
-    panel.grid = element_blank(), 
-    legend.background = element_rect(
-      colour = "transparent", 
-      fill = "transparent"
-    ), 
-    axis.text.x = element_text(angle = 90, vjust = .5)
-  )
-}
-```
-
 .pull-left-wide[
-```{r nyc-taxi-spatial, eval=FALSE}
-nyc_taxi_zones_spatial <- "data/taxi_zones/taxi_zones.shp" |> 
+```{r nyc-taxi-spatial, warning=FALSE}
+dat <- "data/taxi_zones/taxi_zones.shp" |> 
   sf::read_sf() |>
-  janitor::clean_names()
-
-nyc_taxi_zones_spatial |> 
+  janitor::clean_names() |>
   left_join(nyc_taxi_zone_counts,
-            by = c("zone" = "dropoff_zone")) |>
+            by = c("zone" = "dropoff_zone")) 
+
+pic <- dat |> 
   ggplot(aes(fill = n)) + 
-  geom_sf(size = .1) + 
-  scale_fill_distiller(
-    name = "Number of trips",
-    labels = scales::label_comma(),
-    direction = 1
-  ) + 
-  theme_custom()
+  geom_sf() + 
+  theme_void()
 ```
 ]
 
@@ -1140,13 +1132,14 @@ nyc_taxi_zones_spatial |>
 ---
 
 class: theme-green-minimal
+background-image: url("img/airport_map.png")
+background-size: cover
+background-repeat: no-repeat
+background-position: left
 
-## A nice visualization
+## Data visualization
 
-```{r taxi-zones-map, ref.label="nyc-taxi-spatial", out.width=750, echo=FALSE}
-```
-
-
+<!-- let's make this super pretty --> 
 
 
 
