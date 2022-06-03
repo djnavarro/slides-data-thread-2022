@@ -588,37 +588,13 @@ nyc_taxi |>
 
 
 
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## Should we evaluate the query "as is"?
-
-.pull-left-wide[
-```{r nyc-taxi-filter-2b, eval=FALSE}
-nyc_taxi |> 
-  filter(year == 2019) |>
-  select(matches("pickup"), matches("dropoff")) |>
-  collect()
-```
-]
-
-.pull-left-wide[
-- Are we ready to do this?
-- Well, let's quickly check something...
-]
-
-
-
-
 
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
 class: theme-green-minimal
 
-## Should we evaluate the query  "as is"?
+## Check before you `collect()`!
 
 .pull-left-wide[
 ```{r nyc-taxi-filter-2}
@@ -645,7 +621,7 @@ nyc_taxi |>
 
 class: theme-green-minimal
 
-## Should we evaluate the query "as is"?
+## Use `head()` to collect a tiny subset
 
 ```{r nyc-taxi-filter-3a, eval=FALSE}
 nyc_taxi |> 
