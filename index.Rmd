@@ -274,19 +274,16 @@ class: theme-green-minimal
 
 ## Where does Arrow fit (in R)?
 
-- Read and write tabular data files, e.g., parquet, feather, csv
+- Analyze, process, and write multi-file parquet, csv, S3 buckets, ...
 --
 
-- Read and write files in Amazon S3 buckets
---
-
-- Analyze, process, and write multi-file, larger-than-memory datasets
+- Larger-than-memory data sets
 --
 
 - ... many other things...
 --
 
-- Manipulate and analyze Arrow data using dplyr verbs
+- Analyze Arrow data using dplyr verbs
 
 
 
@@ -309,7 +306,7 @@ knitr::include_graphics("img/dplyr-backends-1.svg")
 
 class: theme-green-minimal
 
-## Where does Arrow fit (in R)?
+## dplyr connects to an Arrow backend
 
 ```{r}
 #| echo: false
@@ -324,7 +321,7 @@ knitr::include_graphics("img/dplyr-backends-2.svg")
 
 class: theme-green-minimal
 
-## Where does Arrow fit (in R)?
+## dplyr connects to an Arrow backend
 
 ```{r}
 #| echo: false
@@ -339,7 +336,7 @@ knitr::include_graphics("img/dplyr-backends-3.svg")
 
 class: theme-green-minimal
 
-## Where does Arrow fit (in R)?
+## dplyr connects to an Arrow backend
 
 ```{r}
 #| echo: false

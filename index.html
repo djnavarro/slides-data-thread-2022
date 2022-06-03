@@ -248,19 +248,16 @@ class: theme-green-minimal
 
 ## Where does Arrow fit (in R)?
 
-- Read and write tabular data files, e.g., parquet, feather, csv
+- Analyze, process, and write multi-file parquet, csv, S3 buckets, ...
 --
 
-- Read and write files in Amazon S3 buckets
---
-
-- Analyze, process, and write multi-file, larger-than-memory datasets
+- Larger-than-memory data sets
 --
 
 - ... many other things...
 --
 
-- Manipulate and analyze Arrow data using dplyr verbs
+- Analyze Arrow data using dplyr verbs
 
 
 
@@ -279,7 +276,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Where does Arrow fit (in R)?
+## dplyr connects to an Arrow backend
 
 &lt;img src="img/dplyr-backends-2.svg" width="70%" /&gt;
 
@@ -290,7 +287,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Where does Arrow fit (in R)?
+## dplyr connects to an Arrow backend
 
 &lt;img src="img/dplyr-backends-3.svg" width="70%" /&gt;
 
@@ -301,7 +298,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Where does Arrow fit (in R)?
+## dplyr connects to an Arrow backend
 
 &lt;img src="img/dplyr-backends-4.svg" width="70%" /&gt;
 
@@ -1033,12 +1030,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-01-02 03:11:05               NA              NA                233
-## 2 2019-01-02 02:56:45               NA              NA                186
-## 3 2019-01-02 03:18:28               NA              NA                114
-## 4 2019-01-02 03:25:43               NA              NA                234
-## 5 2019-01-02 03:51:35               NA              NA                246
-## 6 2019-01-02 03:51:54               NA              NA                211
+## 1 2019-11-01 15:10:52               NA              NA                 79
+## 2 2019-11-01 15:03:26               NA              NA                 68
+## 3 2019-11-01 15:10:34               NA              NA                 68
+## 4 2019-11-01 15:10:34               NA              NA                 68
+## 5 2019-11-01 15:14:44               NA              NA                265
+## 6 2019-11-01 15:23:41               NA              NA                265
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -1052,12 +1049,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-01-02 03:11:05               NA              NA                233
-## 2 2019-01-02 02:56:45               NA              NA                186
-## 3 2019-01-02 03:18:28               NA              NA                114
-## 4 2019-01-02 03:25:43               NA              NA                234
-## 5 2019-01-02 03:51:35               NA              NA                246
-## 6 2019-01-02 03:51:54               NA              NA                211
+## 1 2019-10-02 06:41:22               NA              NA                144
+## 2 2019-10-02 06:53:46               NA              NA                246
+## 3 2019-10-02 06:05:22               NA              NA                158
+## 4 2019-10-02 06:19:59               NA              NA                261
+## 5 2019-10-02 06:45:45               NA              NA                229
+## 6 2019-10-02 06:03:44               NA              NA                164
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 
