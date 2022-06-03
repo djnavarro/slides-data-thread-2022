@@ -415,7 +415,7 @@ class: theme-green-minimal
   - Extract taxi rides from the three major airports
   - Visualise the destinations by taxi zone
 
-
+<!-- https://www1.nyc.gov/site/tlc/about/tlc-trip-record-data.page -->
 
 
 <!----------------------------- SLIDE BREAK ----------------------------->
@@ -1166,9 +1166,9 @@ class: theme-green-minimal
 
 ## Where does the new R user go?
 
-- Cookbooks
-- Blogposts
-- Workshops
+- Documentation: [arrow.apache.org/docs/r](https://arrow.apache.org/docs/r/)
+- Cookbook: [arrow.apache.org/cookbook/r](https://arrow.apache.org/cookbook/r/)
+- Resource list: [github.com/thisisnic/awesome-arrow-r](https://github.com/thisisnic/awesome-arrow-r/)
 
 
 
