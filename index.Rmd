@@ -580,8 +580,10 @@ nyc_taxi |>
 ]
 
 .pull-left-wide[
-- The output is a query
-- It has not yet been evaluated
+- The output is a unevaluated query
+- Two possible options:
+  - Calling `compute()` evaluates in Arrow
+  - Calling `collect()` evaluates and returns to R
 ]
 
 
@@ -603,9 +605,8 @@ nyc_taxi |>
 ]
 
 .pull-left-wide[
-- Calling `compute()` evaluates in Arrow
-- Calling `collect()` evaluates and returns to R
-- Let's quickly check something...
+- Are we ready to do this?
+- Well, let's quickly check something...
 ]
 
 

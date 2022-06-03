@@ -924,8 +924,10 @@ nyc_taxi |&gt;
 ]
 
 .pull-left-wide[
-- The output is a query
-- It has not yet been evaluated
+- The output is a unevaluated query
+- Two possible options:
+  - Calling `compute()` evaluates in Arrow
+  - Calling `collect()` evaluates and returns to R
 ]
 
 
@@ -948,9 +950,8 @@ nyc_taxi |&gt;
 ]
 
 .pull-left-wide[
-- Calling `compute()` evaluates in Arrow
-- Calling `collect()` evaluates and returns to R
-- Let's quickly check something...
+- Are we ready to do this?
+- Well, let's quickly check something...
 ]
 
 
@@ -1030,12 +1031,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-11-01 15:10:52               NA              NA                 79
-## 2 2019-11-01 15:03:26               NA              NA                 68
-## 3 2019-11-01 15:10:34               NA              NA                 68
-## 4 2019-11-01 15:10:34               NA              NA                 68
-## 5 2019-11-01 15:14:44               NA              NA                265
-## 6 2019-11-01 15:23:41               NA              NA                265
+## 1 2019-12-01 22:45:18               NA              NA                114
+## 2 2019-12-01 22:04:02               NA              NA                263
+## 3 2019-12-01 22:20:38               NA              NA                 75
+## 4 2019-12-01 22:46:36               NA              NA                 75
+## 5 2019-12-01 22:13:05               NA              NA                107
+## 6 2019-12-01 22:32:19               NA              NA                231
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -1049,12 +1050,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-10-02 06:41:22               NA              NA                144
-## 2 2019-10-02 06:53:46               NA              NA                246
-## 3 2019-10-02 06:05:22               NA              NA                158
-## 4 2019-10-02 06:19:59               NA              NA                261
-## 5 2019-10-02 06:45:45               NA              NA                229
-## 6 2019-10-02 06:03:44               NA              NA                164
+## 1 2019-01-02 03:11:05               NA              NA                233
+## 2 2019-01-02 02:56:45               NA              NA                186
+## 3 2019-01-02 03:18:28               NA              NA                114
+## 4 2019-01-02 03:25:43               NA              NA                234
+## 5 2019-01-02 03:51:35               NA              NA                246
+## 6 2019-01-02 03:51:54               NA              NA                211
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 
