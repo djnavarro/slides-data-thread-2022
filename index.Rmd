@@ -581,9 +581,6 @@ nyc_taxi |>
 
 .pull-left-wide[
 - The output is a unevaluated query
-- Two possible options:
-  - Calling `compute()` evaluates in Arrow
-  - Calling `collect()` evaluates and returns to R
 ]
 
 
@@ -610,7 +607,8 @@ nyc_taxi |>
 
 - 84 million rows is more than I want
 - Perhaps better to collect a subset...
-
+  - Calling `compute()` evaluates in Arrow
+  - Calling `collect()` evaluates and returns to R
 ]
 
 
