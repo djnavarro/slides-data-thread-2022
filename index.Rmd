@@ -110,57 +110,23 @@ knitr::include_graphics("img/danielle.png")
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
-class: theme-green
-
-## What is Apache Arrow?
-
-- Toolbox for in-memory analytics
-- Toolbox for larger than memory data
-- Toolbox for connecting languages and hardware
-- Efficient, performant, open source
-- Details at [arrow.apache.org](https://arrow.apache.org)
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green
-
-## Who is this talk for?
-
-- R users who want to understand Apache Arrow
-- Arrow developers who want to understand the R community
-- Anyone who wants to see me make a fool of myself
-
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green
-
-## What does this talk cover?
-
-- The "big idea" behind Arrow
-- An overview of the {arrow} R package
-- Example analyses using NYC taxi data set (~1.7 billion rows)
-- Links to additional resources!
-
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
 class: theme-dark-maximal
 
-## Apache Arrow
+## What is Apache Arrow?
 
 > A multi-language toolbox <br>
 > for accelerated data interchange <br> 
 > and in-memory processing
+
+
+<!-- ## What is Apache Arrow? -->
+
+<!-- - Toolbox for in-memory analytics -->
+<!-- - Toolbox for larger than memory data -->
+<!-- - Toolbox for connecting languages and hardware -->
+<!-- - Efficient, performant, open source -->
+<!-- - Details at [arrow.apache.org](https://arrow.apache.org) -->
+
 
 
 
@@ -170,7 +136,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## Data interchange without standardization
+## Accelerating data interchange
 
 ```{r}
 #| echo: false
@@ -186,7 +152,7 @@ knitr::include_graphics("img/data-interchange-1.svg")
 
 class: theme-green-minimal
 
-## Data interchange with standardization
+## Accelerating data interchange
 
 ```{r}
 #| echo: false
@@ -265,7 +231,7 @@ knitr::include_graphics("img/simd-4.svg")
 
 class: theme-dark-maximal
 
-## Connecting R to the Arrow ecosystem
+## Where does R fit (in Arrow)?
 
 
 <!----------------------------- SLIDE BREAK ----------------------------->
@@ -317,7 +283,7 @@ knitr::include_graphics("img/arrow-ecosystem-3.svg")
 
 class: theme-dark-maximal
 
-## Connecting Arrow to the R ecosystem
+## Where does Arrow fit (in R)?
 
 
 
@@ -360,7 +326,7 @@ knitr::include_graphics("img/dplyr-backends-1.svg")
 
 class: theme-green-minimal
 
-## dplyr connects to an Arrow backend
+## Where does Arrow fit (in R)?
 
 ```{r}
 #| echo: false
@@ -375,7 +341,7 @@ knitr::include_graphics("img/dplyr-backends-2.svg")
 
 class: theme-green-minimal
 
-## dplyr connects to an Arrow backend
+## Where does Arrow fit (in R)?
 
 ```{r}
 #| echo: false

@@ -100,57 +100,23 @@ class: theme-green
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
-class: theme-green
-
-## What is Apache Arrow?
-
-- Toolbox for in-memory analytics
-- Toolbox for larger than memory data
-- Toolbox for connecting languages and hardware
-- Efficient, performant, open source
-- Details at [arrow.apache.org](https://arrow.apache.org)
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green
-
-## Who is this talk for?
-
-- R users who want to understand Apache Arrow
-- Arrow developers who want to understand the R community
-- Anyone who wants to see me make a fool of myself
-
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green
-
-## What does this talk cover?
-
-- The "big idea" behind Arrow
-- An overview of the {arrow} R package
-- Example analyses using NYC taxi data set (~1.7 billion rows)
-- Links to additional resources!
-
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
 class: theme-dark-maximal
 
-## Apache Arrow
+## What is Apache Arrow?
 
 &gt; A multi-language toolbox &lt;br&gt;
 &gt; for accelerated data interchange &lt;br&gt; 
 &gt; and in-memory processing
+
+
+&lt;!-- ## What is Apache Arrow? --&gt;
+
+&lt;!-- - Toolbox for in-memory analytics --&gt;
+&lt;!-- - Toolbox for larger than memory data --&gt;
+&lt;!-- - Toolbox for connecting languages and hardware --&gt;
+&lt;!-- - Efficient, performant, open source --&gt;
+&lt;!-- - Details at [arrow.apache.org](https://arrow.apache.org) --&gt;
+
 
 
 
@@ -160,7 +126,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## Data interchange without standardization
+## Accelerating data interchange
 
 &lt;img src="img/data-interchange-1.svg" width="70%" /&gt;
 
@@ -172,7 +138,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Data interchange with standardization
+## Accelerating data interchange
 
 &lt;img src="img/data-interchange-2.svg" width="70%" /&gt;
 
@@ -231,7 +197,7 @@ class: theme-green-minimal
 
 class: theme-dark-maximal
 
-## Connecting R to the Arrow ecosystem
+## Where does R fit (in Arrow)?
 
 
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
@@ -271,7 +237,7 @@ class: theme-green-minimal
 
 class: theme-dark-maximal
 
-## Connecting Arrow to the R ecosystem
+## Where does Arrow fit (in R)?
 
 
 
@@ -310,7 +276,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## dplyr connects to an Arrow backend
+## Where does Arrow fit (in R)?
 
 &lt;img src="img/dplyr-backends-2.svg" width="70%" /&gt;
 
@@ -321,7 +287,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## dplyr connects to an Arrow backend
+## Where does Arrow fit (in R)?
 
 &lt;img src="img/dplyr-backends-3.svg" width="70%" /&gt;
 
@@ -1056,12 +1022,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-12-01 22:45:18               NA              NA                114
-## 2 2019-12-01 22:04:02               NA              NA                263
-## 3 2019-12-01 22:20:38               NA              NA                 75
-## 4 2019-12-01 22:46:36               NA              NA                 75
-## 5 2019-12-01 22:13:05               NA              NA                107
-## 6 2019-12-01 22:32:19               NA              NA                231
+## 1 2019-11-01 15:10:52               NA              NA                 79
+## 2 2019-11-01 15:03:26               NA              NA                 68
+## 3 2019-11-01 15:10:34               NA              NA                 68
+## 4 2019-11-01 15:10:34               NA              NA                 68
+## 5 2019-11-01 15:14:44               NA              NA                265
+## 6 2019-11-01 15:23:41               NA              NA                265
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -1075,12 +1041,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-11-01 15:10:52               NA              NA                 79
-## 2 2019-11-01 15:03:26               NA              NA                 68
-## 3 2019-11-01 15:10:34               NA              NA                 68
-## 4 2019-11-01 15:10:34               NA              NA                 68
-## 5 2019-11-01 15:14:44               NA              NA                265
-## 6 2019-11-01 15:23:41               NA              NA                265
+## 1 2019-12-01 22:45:18               NA              NA                114
+## 2 2019-12-01 22:04:02               NA              NA                263
+## 3 2019-12-01 22:20:38               NA              NA                 75
+## 4 2019-12-01 22:46:36               NA              NA                 75
+## 5 2019-12-01 22:13:05               NA              NA                107
+## 6 2019-12-01 22:32:19               NA              NA                231
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 
