@@ -306,12 +306,25 @@ class: theme-green-minimal
 
 
 
+
+&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
+---
+
+class: theme-dark-maximal
+
+## Let's see it in action: 
+## Analyzing Arrow data in R
+
+
+
+
+
 &lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
 ---
 
 class: theme-green-minimal
 
-## How do new users get started?
+## Installing {arrow}
 
 - Install arrow by typing `install.packages("arrow")`
 - To use dplyr pipelines both arrow and dplyr must be loaded
@@ -328,16 +341,6 @@ library(dplyr)
   - [arrow.apache.org/docs/r](https://arrow.apache.org/docs/r/)
   - [blog.djnavarro.net/starting-apache-arrow-in-r](https://blog.djnavarro.net/starting-apache-arrow-in-r/)
 
-
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-dark-maximal
-
-## Let's see it in action!
 
 
 
@@ -389,13 +392,11 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Obtaining the data
+## Downloading the data
 
 .pull-left-wide[
 
 ```r
-library(arrow)
-
 copy_files(
   from = s3_bucket("ursa-labs-taxi-data-v2"),
   to = "~/Datasets/nyc-taxi"
@@ -412,7 +413,7 @@ copy_files(
 
 class: theme-green-minimal
 
-## Obtaining the data
+## Examining the data
 
 .pull-left[
 
@@ -1022,12 +1023,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-11-01 15:10:52               NA              NA                 79
-## 2 2019-11-01 15:03:26               NA              NA                 68
-## 3 2019-11-01 15:10:34               NA              NA                 68
-## 4 2019-11-01 15:10:34               NA              NA                 68
-## 5 2019-11-01 15:14:44               NA              NA                265
-## 6 2019-11-01 15:23:41               NA              NA                265
+## 1 2019-11-02 04:31:11               NA              NA                161
+## 2 2019-11-02 04:31:11               NA              NA                161
+## 3 2019-11-02 04:43:43               NA              NA                233
+## 4 2019-11-02 04:57:46               NA              NA                164
+## 5 2019-11-02 04:57:46               NA              NA                164
+## 6 2019-11-02 04:36:58               NA              NA                261
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -1041,12 +1042,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-12-01 22:45:18               NA              NA                114
-## 2 2019-12-01 22:04:02               NA              NA                263
-## 3 2019-12-01 22:20:38               NA              NA                 75
-## 4 2019-12-01 22:46:36               NA              NA                 75
-## 5 2019-12-01 22:13:05               NA              NA                107
-## 6 2019-12-01 22:32:19               NA              NA                231
+## 1 2019-01-02 03:11:05               NA              NA                233
+## 2 2019-01-02 02:56:45               NA              NA                186
+## 3 2019-01-02 03:18:28               NA              NA                114
+## 4 2019-01-02 03:25:43               NA              NA                234
+## 5 2019-01-02 03:51:35               NA              NA                246
+## 6 2019-01-02 03:51:54               NA              NA                211
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 

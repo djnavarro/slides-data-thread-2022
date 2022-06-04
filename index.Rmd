@@ -368,12 +368,25 @@ knitr::include_graphics("img/dplyr-backends-4.svg")
 
 
 
+
+<!----------------------------- SLIDE BREAK ----------------------------->
+---
+
+class: theme-dark-maximal
+
+## Let's see it in action: 
+## Analyzing Arrow data in R
+
+
+
+
+
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
 
 class: theme-green-minimal
 
-## How do new users get started?
+## Installing {arrow}
 
 - Install arrow by typing `install.packages("arrow")`
 - To use dplyr pipelines both arrow and dplyr must be loaded
@@ -389,16 +402,6 @@ library(dplyr)
   - [arrow.apache.org/docs/r](https://arrow.apache.org/docs/r/)
   - [blog.djnavarro.net/starting-apache-arrow-in-r](https://blog.djnavarro.net/starting-apache-arrow-in-r/)
 
-
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-dark-maximal
-
-## Let's see it in action!
 
 
 
@@ -450,12 +453,10 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Obtaining the data
+## Downloading the data
 
 .pull-left-wide[
 ```{r download-nyc-taxi, eval=FALSE}
-library(arrow)
-
 copy_files(
   from = s3_bucket("ursa-labs-taxi-data-v2"),
   to = "~/Datasets/nyc-taxi"
@@ -472,7 +473,7 @@ copy_files(
 
 class: theme-green-minimal
 
-## Obtaining the data
+## Examining the data
 
 .pull-left[
 
