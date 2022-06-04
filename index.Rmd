@@ -44,10 +44,10 @@ meta() %>%
   meta_name("github-repo" = "djnavarro/slides-data-thread-2022") %>% 
   meta_social(
     title = "Doing more with data: An introduction to Arrow for R users",
-    description = "An example slide deck using the Voltron Data template for xaringan",
-    url = "https://djnavarro.net/xaringan-template-voltrondata",
-    image = "https://djnavarro.net/xaringan-template-voltrondata/img/title-slide-image.png",
-    image_alt = "Image showing the title slide. The title in white reads 'Voltron Data template for xaringan users', with 'by Danielle Navarro' immediately underneath. The background is dark green, with the Voltron Data 'data lake' image shown in light green below the title, and the company logo shown in light green in the top right corner",
+    description = "Slides for a talk on using Apache Arrow in R, presented as part of The Data Thread 2022 conference",
+    url = "https://djnavarro.net/slides-data-thread-2022",
+    image = "https://djnavarro.net/slides-data-thread-2022/img/title-slide-image.png",
+    image_alt = "Image showing the title slide. The title in white reads 'Doing more with data: An introduction to Arrow for R users', with 'by Danielle Navarro' immediately underneath. The background is dark green, with the Voltron Data 'data lake' image shown in light green below the title, and the company logo shown in light green in the top right corner",
     og_type = "website",
     og_author = "Danielle Navarro",
     twitter_card_type = "summary_large_image",
