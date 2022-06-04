@@ -437,6 +437,13 @@ background-position: left
 
 ## Step 1: Get data
 
+<div class="my-footer">
+<span>
+<a style="color:#f97b64; background-color: #22222288; padding: 5px" href="https://unsplash.com/photos/Ra8VlGo0tyI"><b>Image freely available courtesy of Redd, via Unsplash</b></a>
+</span>
+</div> 
+
+
 
 <!----------------------------- SLIDE BREAK ----------------------------->
 ---
@@ -682,11 +689,8 @@ nyc_taxi |>
   collect()
 ```
 
-- Using `head()` allows query optimisation
 - Only collects the first few rows
 - Can be evaluated efficiently
-
-<!-- TODO: this slide is untidy -->
 
 
 <!----------------------------- SLIDE BREAK ----------------------------->
@@ -724,8 +728,14 @@ background-size: cover
 background-repeat: no-repeat
 background-position: left
 
+
 ## Step 2: Find airports
 
+<div class="my-footer">
+<span>
+<a style="color:#f97b64; background-color: #22222288; padding: 5px" href="https://unsplash.com/photos/1fBiGUm_jbw"><b>Image freely available courtesy of Paolo Chiabrando, via Unsplash</b></a>
+</span>
+</div> 
 
 
 <!----------------------------- SLIDE BREAK ----------------------------->
@@ -807,6 +817,11 @@ background-position: left
 
 ## Step 3: Wrangle data
 
+<div class="my-footer">
+<span>
+<a style="color:#f97b64; background-color: #22222288; padding: 5px" href="https://unsplash.com/photos/bunLmHpu1hg"><b>Image freely available courtesy of Helena Lopes, via Unsplash</b></a>
+</span>
+</div> 
 
 
 
@@ -1061,6 +1076,11 @@ background-position: left
 
 ## Step 4: Summarize
 
+<div class="my-footer">
+<span>
+<a style="color:#f97b64; background-color: #22222288; padding: 5px" href="https://unsplash.com/photos/5IHz5WhosQE"><b>Image freely available courtesy of Chris Lawton, via Unsplash</b></a>
+</span>
+</div> 
 
 
 
