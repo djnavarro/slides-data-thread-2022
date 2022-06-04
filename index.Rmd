@@ -144,7 +144,11 @@ class: theme-green
 
 class: theme-dark-maximal
 
-## Apache Arrow: The big idea
+## Apache Arrow
+
+> A multi-language toolbox <br>
+> for accelerated data interchange <br> 
+> and in-memory processing
 
 
 
@@ -154,19 +158,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## What if things were better...
-
-- Insert the motivating example here
-
-
-
-
-<!----------------------------- SLIDE BREAK ----------------------------->
----
-
-class: theme-green-minimal
-
-## Data interchange without a standard format
+## Data interchange without standardization
 
 ```{r}
 #| echo: false
@@ -182,7 +174,7 @@ knitr::include_graphics("img/data-interchange-1.svg")
 
 class: theme-green-minimal
 
-## Data interchange with a standard format
+## Data interchange with standardization
 
 ```{r}
 #| echo: false
@@ -198,7 +190,7 @@ knitr::include_graphics("img/data-interchange-2.svg")
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 ```{r}
 #| echo: false
@@ -213,7 +205,7 @@ knitr::include_graphics("img/simd-1.svg")
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 ```{r}
 #| echo: false
@@ -228,7 +220,7 @@ knitr::include_graphics("img/simd-2.svg")
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 ```{r}
 #| echo: false
@@ -243,7 +235,7 @@ knitr::include_graphics("img/simd-3.svg")
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 ```{r}
 #| echo: false

@@ -138,7 +138,11 @@ class: theme-green
 
 class: theme-dark-maximal
 
-## Apache Arrow: The big idea
+## Apache Arrow
+
+&gt; A multi-language toolbox &lt;br&gt;
+&gt; for accelerated data interchange &lt;br&gt; 
+&gt; and in-memory processing
 
 
 
@@ -148,19 +152,7 @@ class: theme-dark-maximal
 
 class: theme-green-minimal
 
-## What if things were better...
-
-- Insert the motivating example here
-
-
-
-
-&lt;!----------------------------- SLIDE BREAK -----------------------------&gt;
----
-
-class: theme-green-minimal
-
-## Data interchange without a standard format
+## Data interchange without standardization
 
 &lt;img src="img/data-interchange-1.svg" width="70%" /&gt;
 
@@ -172,7 +164,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Data interchange with a standard format
+## Data interchange with standardization
 
 &lt;img src="img/data-interchange-2.svg" width="70%" /&gt;
 
@@ -184,7 +176,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 &lt;img src="img/simd-1.svg" width="70%" /&gt;
 
@@ -195,7 +187,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 &lt;img src="img/simd-2.svg" width="70%" /&gt;
 
@@ -206,7 +198,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 &lt;img src="img/simd-3.svg" width="70%" /&gt;
 
@@ -217,7 +209,7 @@ class: theme-green-minimal
 
 class: theme-green-minimal
 
-## Columnar formats are efficient
+## Efficient in-memory processing
 
 &lt;img src="img/simd-4.svg" width="70%" /&gt;
 
@@ -1052,12 +1044,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-12-01 22:45:18               NA              NA                114
-## 2 2019-12-01 22:04:02               NA              NA                263
-## 3 2019-12-01 22:20:38               NA              NA                 75
-## 4 2019-12-01 22:46:36               NA              NA                 75
-## 5 2019-12-01 22:13:05               NA              NA                107
-## 6 2019-12-01 22:32:19               NA              NA                231
+## 1 2019-01-02 03:11:05               NA              NA                233
+## 2 2019-01-02 02:56:45               NA              NA                186
+## 3 2019-01-02 03:18:28               NA              NA                114
+## 4 2019-01-02 03:25:43               NA              NA                234
+## 5 2019-01-02 03:51:35               NA              NA                246
+## 6 2019-01-02 03:51:54               NA              NA                211
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 ```
@@ -1071,12 +1063,12 @@ nyc_taxi |&gt;
 ## # A tibble: 6 × 8
 ##   pickup_datetime     pickup_longitude pickup_latitude pickup_location_id
 ##   &lt;dttm&gt;                         &lt;dbl&gt;           &lt;dbl&gt;              &lt;int&gt;
-## 1 2019-01-02 03:11:05               NA              NA                233
-## 2 2019-01-02 02:56:45               NA              NA                186
-## 3 2019-01-02 03:18:28               NA              NA                114
-## 4 2019-01-02 03:25:43               NA              NA                234
-## 5 2019-01-02 03:51:35               NA              NA                246
-## 6 2019-01-02 03:51:54               NA              NA                211
+## 1 2019-10-02 06:41:22               NA              NA                144
+## 2 2019-10-02 06:53:46               NA              NA                246
+## 3 2019-10-02 06:05:22               NA              NA                158
+## 4 2019-10-02 06:19:59               NA              NA                261
+## 5 2019-10-02 06:45:45               NA              NA                229
+## 6 2019-10-02 06:03:44               NA              NA                164
 ## # … with 4 more variables: dropoff_datetime &lt;dttm&gt;, dropoff_longitude &lt;dbl&gt;,
 ## #   dropoff_latitude &lt;dbl&gt;, dropoff_location_id &lt;int&gt;
 
