@@ -88,11 +88,23 @@ class: theme-green
 
 ## Who is Danielle Navarro?
 
+.pull-left-narrow[
+  .pull-right-wide[
+```{r}
+#| echo: false
+#| out-width: 100%
+knitr::include_graphics("img/danielle.png")
+```
+  ]
+]
+
+
+.pull-right-wide[
+<br>
 - Developer advocate at Voltron Data
 - Data scientist and generative artist
-- General nuisance in the R community
 - Tweets incessantly at [@djnavarro](https://twitter.com/djnavarro)
-
+]
 
 
 <!----------------------------- SLIDE BREAK ----------------------------->
