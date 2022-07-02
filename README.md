@@ -1,9 +1,5 @@
 
-# Voltron Data template for xaringan users
+Licence notes: 
 
-<!-- badges: start -->
-<!-- badges: end -->
-
-- Template for xaringan slides: knit the `index.Rmd` file
-- Example slides included as `index.html`
-- Main dependencies: `xaringan`, `xaringanthemer`, `flair`, `metathis`, `tidyverse` 
+- the NYC taxi data is released under its own open licence
+- Voltron Data trademarks etc are used here with permission; further reuse may require separate permissions from Voltron Data
